@@ -4,6 +4,34 @@ use std::env;
 
 use crate::file::File;
 
+#[derive(Default)]
+pub struct Directory {
+    files: Vec<File>,
+    path: PathBuf,
+}
+
+impl Directory {
+    // add code here
+    pub fn open_dir(dir_path: &str) -> Result<Self> {
+        let dir_entries = get_dir_entries(&dir_path);
+        //Error handling
+        match dir_entries {
+            Ok(dir_entires) => {
+                let mut files = Vec::new();
+                let path = PathBuf::from(dir_path);
+                for entry in dir_entries {
+                    files.push(File::from(entry));
+                }
+                Ok(Self { 
+                    files,
+                    path,
+                })
+            }
+            _ => {}
+        }
+    }
+}
+
 fn get_dir_entries(read_dir_path: &str) -> Result<Vec<fs::DirEntry>, std::io::Error> {
     let mut dir_entries = vec![];
     for dir_entry in fs::read_dir(read_dir_path)? {
