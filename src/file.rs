@@ -4,7 +4,7 @@ use std::io;
 use std::time::SystemTime;
 use std::path::PathBuf;
 use std::os::unix::fs::DirEntryExt2;
-//#[derive(Default)]
+
 pub struct File {
     // General file info
     name: OsString,

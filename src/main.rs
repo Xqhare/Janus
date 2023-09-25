@@ -1,10 +1,5 @@
 #![feature(dir_entry_ext2)]
-//use std::io;
-//use std::os;
-//use std::fs::ReadDir;
-//use std::path::PathBuf;
-//use std::path::Path;
-//
+
 mod directory;
 mod file;
 
