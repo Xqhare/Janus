@@ -1,5 +1,3 @@
-use std::alloc::Global;
-use std::fs::DirEntry;
 use std::{fs, io};
 use std::path::PathBuf;
 use std::env;
