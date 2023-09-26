@@ -3,14 +3,15 @@
     allocator_api,
     )]
 
+use directory::Directory;
+
 mod directory;
 mod file;
 
 fn main() {
-    let curdir = directory::current_dir();
-    // cant unwrap curdir at the start, so I unwrap it with expect; This panics when an error has
-    // been handed to it though.
-    let dir_path_as_string: String = curdir.expect("REASON").as_os_str().to_string_lossy().into_owned();
-    let dir_path: &str = dir_path_as_string.as_str();
-    directory::print_everything(dir_path);
+    let dir_path = Directory::current_dir().unwrap();
+    let dir_path_as_string: String = Directory::pathbuf_into_string(dir_path);
+    let dir_path_as_str: &str = dir_path_as_string.as_str();
+    let this_dir = Directory::open_dir(&dir_path_as_str).unwrap();
+    Directory::print_dir(&this_dir);
 }
