@@ -1,4 +1,7 @@
-#![feature(dir_entry_ext2)]
+#![feature(
+    dir_entry_ext2,
+    allocator_api,
+    )]
 
 mod directory;
 mod file;

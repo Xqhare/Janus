@@ -17,7 +17,7 @@ pub struct File {
     is_file: bool,
     is_symlink: bool,
     meta_filetype: io::Result<FileType>,
-    byte_len: usize,
+    byte_len: u64,
     time_accessed: io::Result<SystemTime>,
     time_created: io::Result<SystemTime>,
     time_modified: io::Result<SystemTime>,

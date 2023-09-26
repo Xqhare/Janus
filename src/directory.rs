@@ -1,4 +1,6 @@
-use std::fs;
+use std::alloc::Global;
+use std::fs::DirEntry;
+use std::{fs, io};
 use std::path::PathBuf;
 use std::env;
 
@@ -12,22 +14,26 @@ pub struct Directory {
 
 impl Directory {
     // add code here
-    pub fn open_dir(dir_path: &str) -> Result<Self> {
+    pub fn open_dir(dir_path: &str) -> Result<Self, io::Error> {
         let dir_entries = get_dir_entries(&dir_path);
         //Error handling
         match dir_entries {
             Ok(dir_entires) => {
-                let mut files = Vec::new();
-                let path = PathBuf::from(dir_path);
-                for entry in dir_entries {
-                    files.push(File::from(entry));
+                let mut dir_files = Vec::new();
+                let this_path = PathBuf::from(&dir_path);
+                for entry in dir_entires {
+                    //why do i need to reassign here; wtf
+                    let test = entry;
+                    let new_file = File::from(test);
+                    dir_files.push(new_file);
                 }
                 Ok(Self { 
-                    files,
-                    path,
+                    files: dir_files,
+                    path: this_path,
                 })
             }
-            _ => {}
+            _ => { panic!("OPENING AS GONE WRONG! E110")
+            }
         }
     }
 }
