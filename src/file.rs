@@ -30,6 +30,7 @@ impl From<DirEntry> for File {
             name_ref: dir_entry.file_name_ref().to_os_string(),
             path: dir_entry.path(),
             file_extension: {
+                //God this is stupid; I love it!
                 let test1 = OsString::from("None");
                 let test2 = test1.as_os_str();
                 dir_entry.path().extension().unwrap_or(test2).to_os_string()
