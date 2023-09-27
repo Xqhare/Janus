@@ -10,7 +10,7 @@ pub struct File {
     name: OsString,
     name_ref: OsString,
     path: PathBuf,
-    file_type: FileType,
+    file_extension: OsString,
     // Metadata
     permissions: Permissions,
     is_dir: bool,
@@ -29,7 +29,11 @@ impl From<DirEntry> for File {
             name: dir_entry.file_name(),
             name_ref: dir_entry.file_name_ref().to_os_string(),
             path: dir_entry.path(),
-            file_type: dir_entry.file_type().unwrap(),
+            file_extension: {
+                let test1 = OsString::from("None");
+                let test2 = test1.as_os_str();
+                dir_entry.path().extension().unwrap_or(test2).to_os_string()
+            },
             permissions: dir_entry.metadata().unwrap().permissions(),
             is_dir: dir_entry.metadata().unwrap().is_dir(),
             is_file: dir_entry.metadata().unwrap().is_file(),
@@ -44,7 +48,30 @@ impl From<DirEntry> for File {
 }
 
 impl File {
-    pub fn print_all(&self) {
+    pub fn print_name(&self) {
+        let name = &self.name;
+        println!("Name: {}", name.to_str().unwrap());
+    }
+
+    pub fn print_extension(&self) {
+        let extension = &self.file_extension;
+        println!("Extension: {}", extension.to_str().unwrap());
+    }
+
+    pub fn print_dir_file_symlink(&self) {
+        if self.is_dir {
+            let file_type = "Directory".to_string();
+            println!("Type: {}", file_type)
+        } else if self.is_file {
+            let file_type = "File".to_string();
+            println!("Type: {}", file_type)
+        } else {
+            let file_type = "Systemlink".to_string();
+            println!("Type: {}", file_type)
+        }
+    }
+
+    pub fn debug_print_all(&self) {
         // FILENAME
         let dir_entry_file_name = &self.name;
         println!("FILE NAME: {:?}", dir_entry_file_name);
@@ -54,7 +81,7 @@ impl File {
         let dir_entry_path = &self.path;
         println!("PATH: {:?}", dir_entry_path);
         // GET FILETYPE
-        let dir_entry_filetype = self.file_type;
+        let dir_entry_filetype = &self.file_extension;
         println!("FILE TYPE: {:?}", dir_entry_filetype);
         // GET  PERMISSIONS
         let dir_entry_permissions = &self.permissions;

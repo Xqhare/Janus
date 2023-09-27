@@ -18,5 +18,5 @@ fn main() {
     let trimmed_input = input.trim();
     // TODO: trimmed_input really should be checked if it is a valid path.
     let usr_dir = Directory::open_dir(trimmed_input).expect("Error E020");
-    usr_dir.print_dir();
+    usr_dir.print_contents_in_usr_format();
 }

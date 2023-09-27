@@ -45,19 +45,25 @@ impl Directory {
         Ok(path)
     }
     pub fn print_dir(&self) {
-        for entry in &self.files {
-            let file = &entry;
-            let _print = File::print_all(&file);
+        for file in &self.files {
+            let file = &file;
+            let _print = File::debug_print_all(&file);
         }
     }
     pub fn pathbuf_into_string(path: PathBuf) -> String {
         let path_as_string: String = path.as_os_str().to_string_lossy().into_owned();
         return path_as_string;
     }
-    pub fn debug_print_dir(path: PathBuf) {
-        let path_as_string = Self::pathbuf_into_string(path);
-        let path_as_str = path_as_string.as_str();
-        let this_dir = Self::open_dir(&path_as_str).unwrap();
-        Self::print_dir(&this_dir);
-    }
+    pub fn print_contents_in_usr_format(&self) {
+        //loop through all files; print most important info eg.:
+        // - Name, is_dir OR is_file OR is_symlink, Extension
+        let mut file_index = 1;
+        for file in &self.files {
+            println!("Index: {}", file_index);
+            file.print_name();
+            file.print_extension();
+            file.print_dir_file_symlink();
+            file_index += 1;
+        }
+    } 
 }
