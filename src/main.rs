@@ -5,11 +5,10 @@
 #![allow(
     dead_code,
 )]
-use std::io;
-use directory::Directory;
 
 mod directory;
 mod file;
+mod access;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
@@ -29,7 +28,7 @@ fn main() {
         // now main usr input loop
         // TODO: there needs to be more usr input validation than trailing whitespace removal;
         // Remeber: all user input is hostile
-        let usr_cmd = get_usr_cmd_input("Please enter a command:");
+        let usr_cmd = access::get_usr_cmd_input("Please enter a command:");
         let _err_decode_string = "Invalid command".to_owned();
         let _cd = "cd".to_owned();
         let _quit = "q".to_owned();
@@ -39,12 +38,13 @@ fn main() {
         } else if usr_cmd == _quit {
             app = true;
         } else if usr_cmd == _cd {
-            let usr_cd_input = usr_cd();
+            let usr_cd_input = access::usr_cd();
             match usr_cd_input {
                 Ok(directory) => {
-                    //put this into its own function
-                    println!("The directory contains:");
-                    directory.print_contents_in_usr_format();
+                    access::access_dir(directory);
+                    // Now comes the real meat of Janus, the file interaction.
+                    // copy, move, rename, mkdir
+                    // choosen by a full usr provided list, add x..z or x-z functionality later
                 },
                 _ => {
                     println!("Invalid command entered. Aborting.")
@@ -58,21 +58,6 @@ fn main() {
         
     }
 }
-//This doesn't work because we dont give controll over to the terminal control programm;
-// TODO: implement a usr interface
-//fn clear_screen() {
-    // this works because termion is a dependency in Cargo.toml, and the full path is supplied.
-    //crossterm::terminal::Clear;
-//}
-
-fn usr_cd() -> Result<Directory, io::Error> {
-    let path_temp = Directory::current_dir().unwrap();
-    let path = Directory::pathbuf_into_string(path_temp);
-    println!("The current path is: {path}");
-    let usr_input = get_usr_cmd_input("Please enter a path.");
-    let output = Directory::open_dir(usr_input.as_str());
-    return output;
-}
 
 fn print_welcome_msg() {
     println!("------------------------------------------------");
@@ -85,21 +70,15 @@ fn print_keybinds() {
     println!("[c]hange [d]irectory: cd; [q]uit: q");
 }
 
-fn get_usr_cmd_input(prompt: &str) -> String {
-    println!("{prompt}");
-    let mut input = String::new();
-    match io::stdin().read_line(&mut input) {
-        Ok(_input_already_pushed_into_inputvar) => {
-            let output = input.trim().to_owned();
-            return output;
-        },
-        Err(_input_clearly_invalid) => {
-            let invalid_input = "Invalid command".to_owned();
-            return invalid_input;
-        },
-    }
-}
+
 
 fn panic_quit() {
     panic!("Janus paniced! E001")
 }
+
+//This doesn't work because we dont give controll over to the terminal control programm;
+// TODO: implement a usr interface
+//fn clear_screen() {
+    // this works because termion is a dependency in Cargo.toml, and the full path is supplied.
+    //crossterm::terminal::Clear;
+//}
