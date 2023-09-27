@@ -13,7 +13,7 @@ mod file;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
-
+// This is not fully reimplemented. remains here until it is.
 fn old_main() {
     let cur_path = Directory::current_dir().unwrap();
     let cur_path_string = Directory::pathbuf_into_string(cur_path);

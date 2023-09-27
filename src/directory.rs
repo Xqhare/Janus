@@ -28,6 +28,7 @@ impl Directory {
                     path: this_path,
                 })
             }
+            // TODO: learn how to propagate errors
             _ => { panic!("OPENING AS GONE WRONG! E110")
             }
         }
