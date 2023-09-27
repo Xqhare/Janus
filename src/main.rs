@@ -67,7 +67,7 @@ fn print_welcome_msg() {
 
 fn print_keybinds() {
     println!("Commands:");
-    println!("[c]hange [d]irectory: cd; [q]uit: q");
+    println!("[c]hange [d]irectory = cd; [q]uit = q");
 }
 
 
