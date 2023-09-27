@@ -13,19 +13,6 @@ mod file;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
-// This is not fully reimplemented. remains here until it is.
-fn old_main() {
-    let cur_path = Directory::current_dir().unwrap();
-    let cur_path_string = Directory::pathbuf_into_string(cur_path);
-    let mut input = String::new();
-    println!("Please enter a path. Current path: ");
-    println!("{cur_path_string}");
-    io::stdin().read_line(&mut input).expect("Failed to read line. E010");
-    let trimmed_input = input.trim();
-    // TODO: trimmed_input really should be checked if it is a valid path.
-    let usr_dir = Directory::open_dir(trimmed_input).expect("Failed to open directory. Error E020");
-    usr_dir.print_contents_in_usr_format()
-}
 
 fn main() {
     let mut app: bool = false;
@@ -48,11 +35,21 @@ fn main() {
         let _quit = "q".to_owned();
 
         if usr_cmd == _err_decode_string {
-            println!("Invalid command entered. Aborting.");
+            println!("Invalid command '{usr_cmd}' entered. Aborting.");
         } else if usr_cmd == _quit {
             app = true;
         } else if usr_cmd == _cd {
-            unimplemented!();
+            let usr_cd_input = usr_cd();
+            match usr_cd_input {
+                Ok(directory) => {
+                    //put this into its own function
+                    println!("The directory contains:");
+                    directory.print_contents_in_usr_format();
+                },
+                _ => {
+                    println!("Invalid command entered. Aborting.")
+                },
+            }
         } else {
             println!("Invalid command entered. Aborting.");
         }
@@ -60,6 +57,21 @@ fn main() {
         
         
     }
+}
+//This doesn't work because we dont give controll over to the terminal control programm;
+// TODO: implement a usr interface
+//fn clear_screen() {
+    // this works because termion is a dependency in Cargo.toml, and the full path is supplied.
+    //crossterm::terminal::Clear;
+//}
+
+fn usr_cd() -> Result<Directory, io::Error> {
+    let path_temp = Directory::current_dir().unwrap();
+    let path = Directory::pathbuf_into_string(path_temp);
+    println!("The current path is: {path}");
+    let usr_input = get_usr_cmd_input("Please enter a path.");
+    let output = Directory::open_dir(usr_input.as_str());
+    return output;
 }
 
 fn print_welcome_msg() {
@@ -89,5 +101,5 @@ fn get_usr_cmd_input(prompt: &str) -> String {
 }
 
 fn panic_quit() {
-    panic!("Janus exited successfully.")
+    panic!("Janus paniced! E001")
 }
