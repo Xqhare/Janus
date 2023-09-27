@@ -54,4 +54,10 @@ impl Directory {
         let path_as_string: String = path.as_os_str().to_string_lossy().into_owned();
         return path_as_string;
     }
+    pub fn debug_print_dir(path: PathBuf) {
+        let path_as_string = Self::pathbuf_into_string(path);
+        let path_as_str = path_as_string.as_str();
+        let this_dir = Self::open_dir(&path_as_str).unwrap();
+        Self::print_dir(&this_dir);
+    }
 }
