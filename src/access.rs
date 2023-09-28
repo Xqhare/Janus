@@ -1,5 +1,6 @@
 use crate::directory::Directory;
-use std::io;
+use std::io::{self};
+use std::num::ParseIntError;
 
 // Now comes the real meat of Janus, the file interaction.
 // copy, move, rename, mkdir
@@ -17,25 +18,86 @@ pub fn access_dir(directory: Directory) {
     let rename_cmd = "r".to_string();
     let mkdir_cmd = "mkdir".to_string();
 
-
+    // go back
     if back_cmd == usr_cmd_input {
         return;
+    // copy files
     } else if copy_cmd == usr_cmd_input {
-        return;
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let test = usr_file_input_decoder(usr_file_index_list);
+        println!("TEST: {:?}", test);
+        return;
+    // move files
     } else if move_cmd == usr_cmd_input {
-        return;
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        return;
+    // rename files
     } else if rename_cmd == usr_cmd_input {
-        return;
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        return;
+    // make directory in current directory
     } else if mkdir_cmd == usr_cmd_input {
-        return;
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        return;
+    // provided input Invalid!
     } else {
-        // provided input Invalid!
+        println!("Invalid command entered. Aborting.");
         return;
     }
+}
+
+// we need a function that takes in a String, in the format of 'a, b, c, d, e, f-m, n/q, r..u, v, w, z'
+// and returns a vector of the elements as integers
+//      special cases f-m == f to m alias r..u == r to u (inclusive); n/p == o to p (exlusive);
+//
+// THIS JUST WORKS!! Cant deal with whitespace though... also, I learned propagating Errors!
+fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIntError> {
+    if file_index_list.len() <= 0 {
+        println!("Empty input. E200");
+        panic!("Crash code C200.")
+    }
+    let mut fn_output: Vec<usize> = Vec::new();
+    let split_file_list: Vec<&str> = file_index_list.split(",").collect();
+    for index in split_file_list {
+        if index.contains("-") {
+            let start_end_vec = index.split("-").collect::<Vec<&str>>();
+            
+            let [start_str, end_str] = start_end_vec[..] else { todo!()};
+
+            let start = check_str_int(start_str)?;
+            let end = check_str_int(end_str)?;
+            for n in start..=end {
+                fn_output.push(n);
+            }
+        } else if index.contains("..") {
+            let start_end_vec = index.split("..").collect::<Vec<&str>>();
+            let [start_str, end_str] = start_end_vec[..] else { todo!()};
+            let start = check_str_int(start_str)?;
+            let end = check_str_int(end_str)?;
+            for n in start..=end {
+                fn_output.push(n);
+            }
+        } else if index.contains("/") {
+            let start_end_vec = index.split("/").collect::<Vec<&str>>();
+            let [start_str, end_str] = start_end_vec[..] else { todo!()};
+            let start = check_str_int(start_str)? - 1;
+            let end = check_str_int(end_str)?;
+            for n in start..end {
+                fn_output.push(n);
+            }
+        } else {
+            let single_index = check_str_int(index)?;
+            fn_output.push(single_index);
+        }
+    }
+
+    Ok(fn_output)
+
+}
+
+fn check_str_int(to_check: &str) -> Result<usize, ParseIntError> {
+    let number: usize = to_check.parse()?;
+    return Ok(number);
 }
 
 fn print_keybinds() {
