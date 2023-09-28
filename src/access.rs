@@ -23,21 +23,24 @@ pub fn access_dir(directory: Directory) {
         return;
     // copy files
     } else if copy_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
         let test = usr_file_input_decoder(usr_file_index_list);
         println!("TEST: {:?}", test);
+        print_example_dir();
+        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
+        copy_files(list, dir);
         return;
     // move files
     } else if move_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
         return;
     // rename files
     } else if rename_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
         return;
     // make directory in current directory
     } else if mkdir_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
         return;
     // provided input Invalid!
     } else {
@@ -106,10 +109,14 @@ fn print_keybinds() {
 }
 
 // General functions
-pub fn usr_cd() -> Result<Directory, io::Error> {
+fn print_example_dir() {
     let path_temp = Directory::current_dir().unwrap();
     let path = Directory::pathbuf_into_string(path_temp);
-    println!("The current path is: {path}");
+    println!("Your example path: {path}");
+}
+
+pub fn usr_cd() -> Result<Directory, io::Error> {
+    print_example_dir();
     let usr_input = get_usr_cmd_input("Please enter a path.");
     let output = Directory::open_dir(usr_input.as_str());
     return output;
