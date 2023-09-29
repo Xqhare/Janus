@@ -9,6 +9,7 @@
 mod directory;
 mod file;
 mod access;
+mod mkdir;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");

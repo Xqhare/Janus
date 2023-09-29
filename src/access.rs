@@ -1,6 +1,8 @@
 use crate::directory::Directory;
+use crate::mkdir;
 use std::io::{self};
 use std::num::ParseIntError;
+use std::path::Path;
 
 // Now comes the real meat of Janus, the file interaction.
 // copy, move, rename, mkdir
@@ -40,7 +42,10 @@ pub fn access_dir(directory: Directory) {
         return;
     // make directory in current directory
     } else if mkdir_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        print_example_dir();
+        let new_dir_path: String = get_usr_cmd_input("Please enter the path of the directory you want to create.");
+        let parsed_path = Path::new(&new_dir_path);
+        let _ignore_error = mkdir::create_dir(parsed_path);
         return;
     // provided input Invalid!
     } else {
