@@ -23,7 +23,7 @@ pub fn access_dir(directory: Directory) {
         return;
     // copy files
     } else if copy_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         let test = usr_file_input_decoder(usr_file_index_list);
         println!("TEST: {:?}", test);
         print_example_dir();
@@ -32,15 +32,15 @@ pub fn access_dir(directory: Directory) {
         return;
     // move files
     } else if move_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // rename files
     } else if rename_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // make directory in current directory
     } else if mkdir_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact. Remember no whitespace");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // provided input Invalid!
     } else {
@@ -58,7 +58,6 @@ pub fn access_dir(directory: Directory) {
 // - 'g..m' = g to m -- inclusive
 // - 'm/w' = n to v -- exlusive
 // supports input with or without whitespace
-
 // THIS JUST WORKS!! I learned propagating Errors!
 fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIntError> {
     if file_index_list.len() <= 0 {
@@ -104,6 +103,8 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
     Ok(fn_output)
 
 }
+
+// TODO: User path input decoder; check if absolute or relative; return absolute Path
 
 // General functions
 
