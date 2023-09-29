@@ -28,7 +28,7 @@ pub fn access_dir(directory: Directory) {
         println!("TEST: {:?}", test);
         print_example_dir();
         let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
-        copy_files(list, dir);
+        //copy_files(list, dir);
         return;
     // move files
     } else if move_cmd == usr_cmd_input {
@@ -49,47 +49,54 @@ pub fn access_dir(directory: Directory) {
     }
 }
 
-// we need a function that takes in a String, in the format of 'a, b, c, d, e, f-m, n/q, r..u, v, w, z'
-// and returns a vector of the elements as integers
-//      special cases f-m == f to m alias r..u == r to u (inclusive); n/p == o to p (exlusive);
-//
-// THIS JUST WORKS!! Cant deal with whitespace though... also, I learned propagating Errors!
+// Specialised functions
+
+// This function takes in a usr provided String, containing numbers in the following format:
+    // 'a, b-f, g..m, m/w, w, x,y,z' -> returns abc
+// - 'a' = singles
+// - 'b-f'= b to f -- inclusive
+// - 'g..m' = g to m -- inclusive
+// - 'm/w' = n to v -- exlusive
+// supports input with or without whitespace
+
+// THIS JUST WORKS!! I learned propagating Errors!
 fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIntError> {
     if file_index_list.len() <= 0 {
         println!("Empty input. E200");
         panic!("Crash code C200.")
     }
+    let cleaned_file_index_list = remove_all_whitespace(file_index_list);
     let mut fn_output: Vec<usize> = Vec::new();
-    let split_file_list: Vec<&str> = file_index_list.split(",").collect();
+    let split_file_list: Vec<&str> = cleaned_file_index_list.split(",").collect();
     for index in split_file_list {
         if index.contains("-") {
             let start_end_vec = index.split("-").collect::<Vec<&str>>();
             
             let [start_str, end_str] = start_end_vec[..] else { todo!()};
 
-            let start = check_str_int(start_str)?;
-            let end = check_str_int(end_str)?;
+            let start = check_str_into_pos_int(start_str)?;
+            let end = check_str_into_pos_int(end_str)?;
             for n in start..=end {
                 fn_output.push(n);
             }
         } else if index.contains("..") {
             let start_end_vec = index.split("..").collect::<Vec<&str>>();
             let [start_str, end_str] = start_end_vec[..] else { todo!()};
-            let start = check_str_int(start_str)?;
-            let end = check_str_int(end_str)?;
+            let start = check_str_into_pos_int(start_str)?;
+            let end = check_str_into_pos_int(end_str)?;
             for n in start..=end {
                 fn_output.push(n);
             }
         } else if index.contains("/") {
             let start_end_vec = index.split("/").collect::<Vec<&str>>();
             let [start_str, end_str] = start_end_vec[..] else { todo!()};
-            let start = check_str_int(start_str)? - 1;
-            let end = check_str_int(end_str)?;
+            let start = check_str_into_pos_int(start_str)? - 1;
+            let end = check_str_into_pos_int(end_str)?;
             for n in start..end {
                 fn_output.push(n);
             }
         } else {
-            let single_index = check_str_int(index)?;
+            let single_index = check_str_into_pos_int(index)?;
             fn_output.push(single_index);
         }
     }
@@ -98,7 +105,20 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
 
 }
 
-fn check_str_int(to_check: &str) -> Result<usize, ParseIntError> {
+// General functions
+
+fn remove_all_whitespace(string: String) -> String {
+    let input_str = string.as_str();
+    let mut output_string = String::new();
+    for char in input_str.chars() {
+        if !char.is_whitespace() {
+            output_string.push(char);
+        }
+    }
+    output_string
+}
+
+fn check_str_into_pos_int(to_check: &str) -> Result<usize, ParseIntError> {
     let number: usize = to_check.parse()?;
     return Ok(number);
 }
@@ -107,8 +127,6 @@ fn print_keybinds() {
     println!("Commands:");
     println!("[b]ack = b; [c]opy = c; [m]ove = m; [r]ename = r; [m]a[k]e [dir]ectory = mkdir;");
 }
-
-// General functions
 fn print_example_dir() {
     let path_temp = Directory::current_dir().unwrap();
     let path = Directory::pathbuf_into_string(path_temp);
