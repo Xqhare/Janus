@@ -1,3 +1,4 @@
+use std::ffi::OsString;
 use std::{fs, io, env};
 use std::path::PathBuf;
 
@@ -72,5 +73,20 @@ impl Directory {
             println!("------------------");
             file_index += 1;
         }
-    } 
+    }
+
+    pub fn file_at_index(&self, index: usize) -> &File {
+        let output = &self.files.get(index).unwrap();
+        output
+    }
+
+    pub fn return_all_files(&self) -> Vec<OsString> {
+        let all_files = &self.files;
+        let mut output = Vec::new;
+        for entry in all_files {
+            let inc_output = entry.to_os_string();
+            output.push();
+        }
+        output
+    }
 }

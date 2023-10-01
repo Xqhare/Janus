@@ -72,6 +72,11 @@ impl File {
         }
     }
 
+    pub fn return_path(&self) -> PathBuf {
+        let output = &self.path;
+        output.to_path_buf()
+    }
+
     pub fn debug_print_all(&self) {
         // FILENAME
         let dir_entry_file_name = &self.name;

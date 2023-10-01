@@ -1,8 +1,8 @@
 use crate::directory::Directory;
 use crate::mkdir;
-use std::io::{self};
+use std::io::{self, ErrorKind};
 use std::num::ParseIntError;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 // Now comes the real meat of Janus, the file interaction.
 // copy, move, rename, mkdir
@@ -22,16 +22,33 @@ pub fn access_dir(directory: Directory) {
 
     // go back
     if back_cmd == usr_cmd_input {
-        return;
+        return ;
     // copy files
     } else if copy_cmd == usr_cmd_input {
+
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-        let test = usr_file_input_decoder(usr_file_index_list);
-        println!("TEST: {:?}", test);
+        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+            Ok(index_list) => {index_list},
+            Err(any_err) => {
+                println!("Error {any_err} encountered. Aborting step.");
+                return;
+            },
+        };
+
         print_example_dir();
         let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
-        //copy_files(list, dir);
-        return;
+        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir) {
+            Ok(ok_path) => {ok_path},
+            Err(any_err) => {
+                println!("Error {any_err} encountered. Aborting step.");
+                return;
+            },
+        };
+        if path_existence_and_creator(copy_dir_decoded) {
+            // WIP actual copying
+        } else {
+            return;
+        };
     // move files
     } else if move_cmd == usr_cmd_input {
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
@@ -53,6 +70,63 @@ pub fn access_dir(directory: Directory) {
         return;
     }
 }
+
+fn yn_decoder(input: String) -> bool {
+    if input == "Yes".to_owned() || input == "Y".to_owned() || input == "y".to_owned() {
+        true
+    } else if input == "No".to_owned() || input == "N".to_owned() || input == "n".to_owned() {
+        false
+    } else {
+        false
+    }
+}
+
+fn path_existence_and_creator(path: PathBuf) -> bool {
+        let path_to_test = path;
+        // If path exists, continue, if not ask usr for consent to create it.
+        if check_existance_dir(path_to_test) {
+            // Path exists
+            return true;
+        } else {
+            // Path DOESNT exist
+            let usr_answer = get_usr_cmd_input("Choosen path does not exist. Do you want to create it? y/n");
+            let usr_answer_decoded = yn_decoder(usr_answer);
+            if !usr_answer_decoded {
+                return false;
+            } else {
+                mkdir::create_dir(path.as_path());
+                return true;
+            }
+        }
+}
+
+fn check_string_into_path(input: String) -> std::io::Result<PathBuf> {
+    let path_to_test = Path::new(&input);
+    // if this check returns true; the Input can be used without any more modification.
+    let test_answer = canon(path_to_test.to_path_buf());
+    match test_answer {
+        Ok(returned_absolute_path) => {
+            return Ok(returned_absolute_path);
+        }
+        Err(an_error) => {
+            return Err(an_error);
+        }
+    }
+}
+
+fn check_existance_dir(path: PathBuf) -> bool {
+    if path.exists() {
+        true
+    } else {
+        false
+    }
+}
+
+fn canon(path: PathBuf) -> std::io::Result<PathBuf> {
+    let out = path.canonicalize()?;
+    return Ok(out);
+}
+
 
 // Specialised functions
 
