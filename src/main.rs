@@ -11,6 +11,7 @@ mod file;
 mod access;
 mod mkdir;
 mod rename;
+mod copy;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");

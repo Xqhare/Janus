@@ -46,6 +46,8 @@ pub fn access_dir(directory: Directory) {
         };
         if path_existence_and_creator(copy_dir_decoded) {
             // WIP actual copying
+            // extract current name and extension, paste them on the new module_path!
+            // run fs::copy(old, new)?;
         } else {
             return;
         };
