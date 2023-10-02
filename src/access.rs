@@ -63,19 +63,19 @@ pub fn access_dir(directory: Directory) {
         } else {
             return;
         };
-    // move files
+    // WIP move files -> means DELETION of files. Do this last.
     } else if move_cmd == usr_cmd_input {
         println!("-----------------------");
         print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
-    // rename files
+    // WIP rename files
     } else if rename_cmd == usr_cmd_input {
         println!("-----------------------");
         print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
-    // make directory in current directory
+    // make directory
     } else if mkdir_cmd == usr_cmd_input {
         println!("-----------------------");
         print_example_dir();
@@ -83,13 +83,13 @@ pub fn access_dir(directory: Directory) {
         let parsed_path = Path::new(&new_dir_path);
         let _ignore_error = mkdir::create_dir(parsed_path);
         return;
-    // copy AND rename files
+    // WIP copy AND rename files
     } else if copy_rename_cmd == usr_cmd_input || copy_rename_cmd_alt == usr_cmd_input {
         println!("-----------------------");
         print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
-    // move AND rename files
+    // WIP move AND rename files
     } else if move_rename_cmd == usr_cmd_input || move_rename_cmd_alt == usr_cmd_input {
         println!("-----------------------");
         print_index_example();
@@ -166,9 +166,6 @@ fn print_index_example() {
     println!("--------------------------------------------------------------------------------------")
 }
 
-
-// Specialised functions
-
 // This function takes in a usr provided String, containing numbers in the following format:
     // 'a, b-f, g..m, m/w, w, x,y,z' -> returns abc
 // - 'a' = singles
@@ -217,12 +214,8 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
             fn_output.push(single_index);
         }
     }
-
     Ok(fn_output)
-
 }
-
-// TODO: User path input decoder; check if absolute or relative; return absolute Path
 
 // General functions
 
@@ -254,6 +247,7 @@ fn print_keybinds() {
     println!("[M/m]ove & [r]ename = mr / M");
     println!("----------------------------")
 }
+
 fn print_example_dir() {
     let path_temp = Directory::current_dir().unwrap();
     let path = Directory::pathbuf_into_string(path_temp);

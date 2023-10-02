@@ -47,8 +47,6 @@ fn main() {
                 Ok(directory) => {
                     access::access_dir(directory);
                     // Now comes the real meat of Janus, the file interaction.
-                    // copy, move, rename, mkdir
-                    // choosen by a full usr provided list, add x..z or x-z functionality later
                 },
                 _ => {
                     println!("Invalid command entered. Aborting.")
@@ -57,9 +55,6 @@ fn main() {
         } else {
             println!("Invalid command entered. Aborting.");
         }
-
-        
-        
     }
 }
 
@@ -76,15 +71,6 @@ fn print_keybinds() {
     println!("-------------------------")
 }
 
-
-
 fn panic_quit() {
     panic!("Janus paniced! E001")
 }
-
-//This doesn't work because we dont give controll over to the terminal control programm;
-// TODO: implement a usr interface
-//fn clear_screen() {
-    // this works because termion is a dependency in Cargo.toml, and the full path is supplied.
-    //crossterm::terminal::Clear;
-//}

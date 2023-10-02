@@ -1,8 +1,6 @@
 use std::{path::{Path}, fs};
 use Into;
 
-
-
 // we need a way to enter a renaming scheme, decode it, and implement it for every file.
 // Scheme:
 // custom name, index
@@ -10,6 +8,8 @@ use Into;
 // custom name needs to support entered whitespace. For linux support only / or NUL are non valid,
 // for rest: NUL, \, /, :, *, ?, ", <, >, |. (for win no whitespace at start or end, and no period
 // as last)
+//
+// More TODO: add creation_time to the scheme
 
 fn make_rename_scheme(usr_scheme: String, file_indexes: Vec<usize>) -> Result<Vec<String>, std::io::Error> {
     if usr_scheme.len() <= 0 {

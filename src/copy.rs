@@ -5,10 +5,9 @@ use std::path::{PathBuf, Path};
 use crate::file;
 use crate::directory::{self, Directory};
 
-// WIP actual copying
+// actual copying
 // extract current name and extension, paste them on the new module_path!
 // run fs::copy(old, new)?;
-//
 
 fn new_full_path(path: &PathBuf, name_with_extension: OsString) -> PathBuf {
     let mut output: PathBuf = path.to_path_buf();

@@ -4,7 +4,6 @@ use std::io;
 use std::time::SystemTime;
 use std::path::PathBuf;
 
-
 pub struct File {
     // General file info
     name: OsString,

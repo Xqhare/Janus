@@ -1,4 +1,3 @@
-
 use std::{fs, io, env};
 use std::path::PathBuf;
 
@@ -38,6 +37,7 @@ impl Directory {
             }
         }
     }
+
     fn get_dir_entries(read_dir_path: &str) -> Result<Vec<fs::DirEntry>, std::io::Error> {
         let mut dir_entries = vec![];
         for dir_entry in fs::read_dir(read_dir_path)? {
@@ -46,20 +46,24 @@ impl Directory {
         }
         Ok(dir_entries)
     }
+
     pub fn current_dir() -> std::io::Result<PathBuf> {
         let path = env::current_dir()?;
         Ok(path)
     }
+
     pub fn print_dir(&self) {
         for file in &self.files {
             let file = &file;
             let _print = File::debug_print_all(&file);
         }
     }
+
     pub fn pathbuf_into_string(path: PathBuf) -> String {
         let path_as_string: String = path.as_os_str().to_string_lossy().into_owned();
         return path_as_string;
     }
+
     pub fn print_contents_in_usr_format(&self) {
         //loop through all files; print most important info eg.:
         // - Name, is_dir OR is_file OR is_symlink, Extension
