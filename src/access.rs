@@ -38,11 +38,15 @@ pub fn access_dir(directory: Directory) {
 
         print_example_dir();
         let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
-        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir) {
+        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                println!("Error {any_err} encountered. Aborting step.");
-                return;
+                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
+                    PathBuf::from(copy_to_dir)
+                } else {
+                    println!("Error {any_err} encountered. Aborting step.");
+                    return;
+                }
             },
         };
         if path_existence_and_creator(copy_dir_decoded.clone()) {
