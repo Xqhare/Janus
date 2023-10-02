@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 
 // Main Function
 pub fn access_dir(directory: Directory) {
+    println!("-----------------------");
     println!("The directory contains:");
     directory.print_contents_in_usr_format();
     print_keybinds();
@@ -20,13 +21,17 @@ pub fn access_dir(directory: Directory) {
     let move_cmd = "m".to_string();
     let rename_cmd = "r".to_string();
     let mkdir_cmd = "mkdir".to_string();
+    let move_rename_cmd = "mr".to_string();
+    let move_rename_cmd_alt = "M".to_string();
+    let copy_rename_cmd = "cr".to_string();
+    let copy_rename_cmd_alt = "C".to_string();
 
     // go back
     if back_cmd == usr_cmd_input {
         return ;
     // copy files
     } else if copy_cmd == usr_cmd_input {
-
+        println!("-----------------------");
         print_index_example();
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
@@ -36,7 +41,7 @@ pub fn access_dir(directory: Directory) {
                 return;
             },
         };
-
+        println!("-----------------------");
         print_example_dir();
         let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
         let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
@@ -52,26 +57,43 @@ pub fn access_dir(directory: Directory) {
         };
         if path_existence_and_creator(copy_dir_decoded.clone()) {
             // Actual copying
-            copy::copy_loop(directory, index_list, copy_dir_decoded)
+            copy::copy_loop(directory, index_list, copy_dir_decoded);
+            println!("Copying successful. Returning to main menu.");
+            println!("-------------------------------------------");
         } else {
             return;
         };
     // move files
     } else if move_cmd == usr_cmd_input {
+        println!("-----------------------");
         print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // rename files
     } else if rename_cmd == usr_cmd_input {
+        println!("-----------------------");
         print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // make directory in current directory
     } else if mkdir_cmd == usr_cmd_input {
+        println!("-----------------------");
         print_example_dir();
         let new_dir_path: String = get_usr_cmd_input("Please enter the path of the directory you want to create.");
         let parsed_path = Path::new(&new_dir_path);
         let _ignore_error = mkdir::create_dir(parsed_path);
+        return;
+    // copy AND rename files
+    } else if copy_rename_cmd == usr_cmd_input || copy_rename_cmd_alt == usr_cmd_input {
+        println!("-----------------------");
+        print_index_example();
+        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        return;
+    // move AND rename files
+    } else if move_rename_cmd == usr_cmd_input || move_rename_cmd_alt == usr_cmd_input {
+        println!("-----------------------");
+        print_index_example();
+        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // provided input Invalid!
     } else {
@@ -141,6 +163,7 @@ fn print_index_example() {
     println!("Index entry has to follow this format:");
     println!("1, 2-4, 5..7, 7/9, 9,10");
     println!("',' between the indicies; 2-4 & 5..7 = inclusive; 7/9 = exclusive; Spaces don't matter");
+    println!("--------------------------------------------------------------------------------------")
 }
 
 
@@ -220,8 +243,16 @@ fn check_str_into_pos_int(to_check: &str) -> Result<usize, ParseIntError> {
 }
 
 fn print_keybinds() {
+    // back, copy, move, rename, make directory, copy-rename, move-rename
     println!("Commands:");
-    println!("[b]ack = b; [c]opy = c; [m]ove = m; [r]ename = r; [m]a[k]e [dir]ectory = mkdir;");
+    println!("[b]ack = b");
+    println!("[c]opy = c");
+    println!("[m]ove = m");
+    println!("[r]ename = r");
+    println!("[m]a[k]e [dir]ectory = mkdir");
+    println!("[C/c]opy & [r]ename = cr / C");
+    println!("[M/m]ove & [r]ename = mr / M");
+    println!("----------------------------")
 }
 fn print_example_dir() {
     let path_temp = Directory::current_dir().unwrap();

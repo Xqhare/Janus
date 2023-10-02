@@ -18,13 +18,13 @@ const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
 
 fn main() {
     let mut app: bool = false;
-    print_welcome_msg();
     loop {
         // app kill switch
         if app {
             break;  
         }
 
+        print_welcome_msg();
         // print possible commands
         print_keybinds();
         
@@ -41,6 +41,7 @@ fn main() {
         } else if usr_cmd == _quit {
             app = true;
         } else if usr_cmd == _cd {
+            println!("-----------------------");
             let usr_cd_input = access::usr_cd();
             match usr_cd_input {
                 Ok(directory) => {
@@ -70,7 +71,9 @@ fn print_welcome_msg() {
 
 fn print_keybinds() {
     println!("Commands:");
-    println!("[c]hange [d]irectory = cd; [q]uit = q");
+    println!("[q]uit = q");
+    println!("[c]hange [d]irectory = cd");
+    println!("-------------------------")
 }
 
 

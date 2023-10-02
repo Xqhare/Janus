@@ -65,12 +65,12 @@ impl Directory {
         // - Name, is_dir OR is_file OR is_symlink, Extension
         let mut file_index = 0;
         for file in &self.files {
-            println!("------------------");
+            println!("==================");
             println!("Index: {}", file_index);
             file.print_name();
             file.print_extension();
             file.print_dir_file_symlink();
-            println!("------------------");
+            println!("==================");
             file_index += 1;
         }
     }
