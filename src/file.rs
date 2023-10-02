@@ -27,7 +27,7 @@ impl From<DirEntry> for File {
     fn from(dir_entry: DirEntry) -> Self {
         Self { 
             name: dir_entry.file_name(),
-            name_ref: dir_entry.file_name_ref().to_os_string(),
+            name_ref: dir_entry.path().file_name().unwrap().to_os_string(),
             path: dir_entry.path(),
             file_extension: {
                 //God this is stupid; I love it!
@@ -75,6 +75,12 @@ impl File {
     pub fn return_path(&self) -> PathBuf {
         let output = &self.path;
         output.to_path_buf()
+    }
+
+    pub fn return_name_and_extension(&self) -> OsString {
+        let name = &self.name_ref;
+        let output = name.to_os_string();
+        return output;
     }
 
     pub fn debug_print_all(&self) {

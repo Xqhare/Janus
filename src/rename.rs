@@ -26,11 +26,11 @@ fn make_rename_scheme(usr_scheme: String, file_indexes: Vec<usize>) -> Result<Ve
     let split_usr_scheme: Vec<&str> = usr_scheme.split(",").collect();
 
     for file_index in file_indexes {
-        for entry in split_usr_scheme {
+        for entry in &split_usr_scheme {
             let mut tmp_output: String = String::new();
             if entry.contains("index") {
-                let index_string: &str = file_index.to_string().as_str();
-                tmp_output.push_str(index_string);
+                let index_string = file_index.to_string();
+                tmp_output.push_str(index_string.as_str());
             } else {
                 tmp_output.push_str(entry);
             }
@@ -47,7 +47,7 @@ fn rename_single_file<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> std::io
     Ok(())
 }
 
-fn rename_by_list(list: Vec<usize>, dir: Directory, new_name_list: Vec<PathBuf>) -> std::io::Result<()> {
+/* fn rename_by_list(list: Vec<usize>, dir: Directory, new_name_list: Vec<PathBuf>) -> std::io::Result<()> {
     let mut counter = 0;
     let test = dir;
     for index in list {
@@ -60,4 +60,4 @@ fn rename_by_list(list: Vec<usize>, dir: Directory, new_name_list: Vec<PathBuf>)
         counter += 1;
     }
     Ok(())
-}
+} */

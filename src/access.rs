@@ -1,5 +1,6 @@
 use crate::directory::Directory;
 use crate::mkdir;
+use crate::copy;
 use std::io::{self, ErrorKind};
 use std::num::ParseIntError;
 use std::path::{Path, PathBuf};
@@ -44,10 +45,12 @@ pub fn access_dir(directory: Directory) {
                 return;
             },
         };
-        if path_existence_and_creator(copy_dir_decoded) {
+        if path_existence_and_creator(copy_dir_decoded.clone()) {
             // WIP actual copying
             // extract current name and extension, paste them on the new module_path!
             // run fs::copy(old, new)?;
+            //
+            copy::copy_loop(directory, index_list, copy_dir_decoded)
         } else {
             return;
         };
@@ -84,7 +87,7 @@ fn yn_decoder(input: String) -> bool {
 }
 
 fn path_existence_and_creator(path: PathBuf) -> bool {
-        let path_to_test = path;
+        let path_to_test = path.clone();
         // If path exists, continue, if not ask usr for consent to create it.
         if check_existance_dir(path_to_test) {
             // Path exists

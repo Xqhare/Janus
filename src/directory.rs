@@ -2,7 +2,7 @@ use std::ffi::OsString;
 use std::{fs, io, env};
 use std::path::PathBuf;
 
-use crate::file::File;
+use crate::file::{File, self};
 
 #[derive(Default)]
 pub struct Directory {
@@ -80,12 +80,12 @@ impl Directory {
         output
     }
 
-    pub fn return_all_files(&self) -> Vec<OsString> {
-        let all_files = &self.files;
-        let mut output = Vec::new;
+    pub fn return_all_files(self) -> Vec<file::File> {
+        let all_files = self.files;
+        let mut output: Vec<file::File> = Vec::new();
         for entry in all_files {
-            let inc_output = entry.to_os_string();
-            output.push();
+            let test = entry;
+            output.push(test)
         }
         output
     }
