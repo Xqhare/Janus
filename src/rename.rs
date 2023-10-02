@@ -1,7 +1,7 @@
-use std::{path::{Path, PathBuf}, fs, io::{ErrorKind, self}};
+use std::{path::{Path}, fs};
 use Into;
 
-use crate::{directory::Directory, access};
+
 
 // we need a way to enter a renaming scheme, decode it, and implement it for every file.
 // Scheme:

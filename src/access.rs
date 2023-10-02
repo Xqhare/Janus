@@ -1,7 +1,7 @@
 use crate::directory::Directory;
 use crate::mkdir;
 use crate::copy;
-use std::io::{self, ErrorKind};
+use std::io::{self};
 use std::num::ParseIntError;
 use std::path::{Path, PathBuf};
 
@@ -60,11 +60,11 @@ pub fn access_dir(directory: Directory) {
         };
     // move files
     } else if move_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // rename files
     } else if rename_cmd == usr_cmd_input {
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // make directory in current directory
     } else if mkdir_cmd == usr_cmd_input {

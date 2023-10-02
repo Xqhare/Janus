@@ -3,7 +3,7 @@ use std::fs::{Permissions, FileType, DirEntry};
 use std::io;
 use std::time::SystemTime;
 use std::path::PathBuf;
-use std::os::unix::fs::DirEntryExt2;
+
 
 pub struct File {
     // General file info
