@@ -27,6 +27,7 @@ pub fn access_dir(directory: Directory) {
     // copy files
     } else if copy_cmd == usr_cmd_input {
 
+        print_index_example();
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
             Ok(index_list) => {index_list},
@@ -50,20 +51,19 @@ pub fn access_dir(directory: Directory) {
             },
         };
         if path_existence_and_creator(copy_dir_decoded.clone()) {
-            // WIP actual copying
-            // extract current name and extension, paste them on the new module_path!
-            // run fs::copy(old, new)?;
-            //
+            // Actual copying
             copy::copy_loop(directory, index_list, copy_dir_decoded)
         } else {
             return;
         };
     // move files
     } else if move_cmd == usr_cmd_input {
+        print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // rename files
     } else if rename_cmd == usr_cmd_input {
+        print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // make directory in current directory
@@ -103,7 +103,7 @@ fn path_existence_and_creator(path: PathBuf) -> bool {
             if !usr_answer_decoded {
                 return false;
             } else {
-                mkdir::create_dir(path.as_path());
+                let _ = mkdir::create_dir(path.as_path());
                 return true;
             }
         }
@@ -134,6 +134,13 @@ fn check_existance_dir(path: PathBuf) -> bool {
 fn canon(path: PathBuf) -> std::io::Result<PathBuf> {
     let out = path.canonicalize()?;
     return Ok(out);
+}
+
+fn print_index_example() {
+    // 'a, b-f, g..m, m/w, w, x,y,z' -> returns abc
+    println!("Index entry has to follow this format:");
+    println!("1, 2-4, 5..7, 7/9, 9,10");
+    println!("',' between the indicies; 2-4 & 5..7 = inclusive; 7/9 = exclusive; Spaces don't matter");
 }
 
 
