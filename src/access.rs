@@ -1,3 +1,4 @@
+use crate::directory;
 use crate::directory::Directory;
 use crate::mkdir;
 use crate::copy;
@@ -20,7 +21,6 @@ pub fn access_dir(directory: Directory) {
     print::keybinds_cd_menu();
     let usr_cmd_input = get_usr_cmd_input("Please enter a command:");
     let back_cmd = "b".to_string();
-    let back_cmd_alt = "q".to_string();
     let copy_cmd = "c".to_string();
     let move_cmd = "m".to_string();
     let rename_cmd = "r".to_string();
@@ -31,7 +31,7 @@ pub fn access_dir(directory: Directory) {
     let copy_rename_cmd_alt = "C".to_string();
     // NOT EXPOSED TO UI
     let test_cmd = "t".to_string();
-
+    let back_cmd_alt = "q".to_string();
     // go back
     if back_cmd == usr_cmd_input || back_cmd_alt == usr_cmd_input {
         return ;
@@ -59,6 +59,7 @@ pub fn access_dir(directory: Directory) {
                 }
             },
         };
+        // This is wierd and needs a rework
         if path_existence_and_creator(copy_dir_decoded.clone()) {
             // Actual copying
             copy::copy_loop(directory, index_list, copy_dir_decoded);
@@ -96,10 +97,62 @@ pub fn access_dir(directory: Directory) {
         let parsed_path = Path::new(&new_dir_path);
         let _ignore_error = mkdir::create_dir(parsed_path);
         return;
-    // WIP copy AND rename files
+    // copy AND rename files
     } else if copy_rename_cmd == usr_cmd_input || copy_rename_cmd_alt == usr_cmd_input {
+        let mut copy_success = false;
+        // first I just copy
         print::index_example();
-        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+            Ok(index_list) => {index_list},
+            Err(any_err) => {
+                println!("Error {any_err} encountered. Aborting step.");
+                return;
+            },
+        };
+        print::example_dir();
+        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
+        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
+            Ok(ok_path) => {ok_path},
+            Err(any_err) => {
+                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
+                    PathBuf::from(copy_to_dir)
+                } else {
+                    println!("Error {any_err} encountered. Aborting step.");
+                    return;
+                }
+            },
+        };
+        // This is wierd and needs a rework
+        if path_existence_and_creator(copy_dir_decoded.clone()) {
+            // Actual copying
+            copy::copy_loop(directory, index_list, copy_dir_decoded.clone());
+            copy_success = true;
+        }
+        // NOW I move to rename
+        // first sanity check if copy was done.
+        if copy_success {
+            let new_dir = Directory::open_dir(&copy_dir_decoded.as_os_str().to_str().unwrap()).unwrap();
+            println!("-----------------------");
+            println!("The directory contains:");
+            new_dir.print_contents_in_usr_format();
+            print::index_example();
+            let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+            let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+                Ok(index_list) => {index_list},
+                Err(any_err) => {
+                    println!("Error {any_err} encountered. Aborting step.");
+                    return;
+                },
+            };
+            print::rename_schema_example();
+            let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
+            rename::rename_loop(new_dir, index_list, usr_scheme_input);
+            println!("Copy and renaming successful. Returning to main menu.");
+            println!("-------------------------------------------");
+            return;
+        }
+        // Failsafe
         return;
     // WIP move AND rename files
     } else if move_rename_cmd == usr_cmd_input || move_rename_cmd_alt == usr_cmd_input {
@@ -142,7 +195,7 @@ fn path_existence_and_creator(path: PathBuf) -> bool {
             }
         }
 }
-
+// WIP with debug still on and temp variable names!
 fn check_string_into_path(input: String) -> std::io::Result<PathBuf> {
     if input.starts_with("~") {
         let stripped_input = input.trim_start_matches("~").to_string();
