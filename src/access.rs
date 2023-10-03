@@ -29,7 +29,7 @@ pub fn access_dir(directory: Directory) {
     let move_rename_cmd_alt = "M".to_string();
     let copy_rename_cmd = "cr".to_string();
     let copy_rename_cmd_alt = "C".to_string();
-    // NOT EXPOSED ZO UI
+    // NOT EXPOSED TO UI
     let test_cmd = "t".to_string();
 
     // go back
@@ -86,7 +86,7 @@ pub fn access_dir(directory: Directory) {
         print::rename_schema_example();
         let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
         rename::rename_loop(directory, index_list, usr_scheme_input);
-        println!("Copying successful. Returning to main menu.");
+        println!("Renaming successful. Returning to main menu.");
         println!("-------------------------------------------");
         return;
     // make directory
