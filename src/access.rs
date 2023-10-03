@@ -1,4 +1,3 @@
-use crate::directory;
 use crate::directory::Directory;
 use crate::mkdir;
 use crate::copy;
@@ -59,7 +58,7 @@ pub fn access_dir(directory: Directory) {
                 }
             },
         };
-        // This is wierd and needs a rework
+        // TODO: This is wierd and needs a rework
         if path_existence_and_creator(copy_dir_decoded.clone()) {
             // Actual copying
             copy::copy_loop(directory, index_list, copy_dir_decoded);
@@ -123,7 +122,7 @@ pub fn access_dir(directory: Directory) {
                 }
             },
         };
-        // This is wierd and needs a rework
+        // TODO: This is wierd and needs a rework
         if path_existence_and_creator(copy_dir_decoded.clone()) {
             // Actual copying
             copy::copy_loop(directory, index_list, copy_dir_decoded.clone());
@@ -195,21 +194,19 @@ fn path_existence_and_creator(path: PathBuf) -> bool {
             }
         }
 }
-// WIP with debug still on and temp variable names!
+
 fn check_string_into_path(input: String) -> std::io::Result<PathBuf> {
     if input.starts_with("~") {
         let stripped_input = input.trim_start_matches("~").to_string();
-        let test = PathBuf::from(stripped_input);
+        let stripped_input_path = PathBuf::from(stripped_input);
         let usr_home_dir = return_home_dir_path();
-        let test2 = usr_home_dir.join(test);
-        println!("Debug: {:?}", test2);
-        println!("Debug home: {:?}", usr_home_dir);
-        return Ok(test2);
+        let output_path = usr_home_dir.join(stripped_input_path);
+        return Ok(output_path);
     } else {
         let path_to_test = Path::new(&input);
         // if this check returns true; the Input can be used without any more modification.
-        let test_answer = canon(path_to_test.to_path_buf());
-        match test_answer {
+        let canon_test = canon(path_to_test.to_path_buf());
+        match canon_test {
             Ok(returned_absolute_path) => {
                 return Ok(returned_absolute_path);
             }
