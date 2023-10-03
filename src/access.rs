@@ -1,6 +1,7 @@
 use crate::directory::Directory;
 use crate::mkdir;
 use crate::copy;
+use home::home_dir;
 use std::io::{self};
 use std::num::ParseIntError;
 use std::path::{Path, PathBuf};
@@ -25,6 +26,8 @@ pub fn access_dir(directory: Directory) {
     let move_rename_cmd_alt = "M".to_string();
     let copy_rename_cmd = "cr".to_string();
     let copy_rename_cmd_alt = "C".to_string();
+    // NOT EXPOSED ZO UI
+    let test_cmd = "t".to_string();
 
     // go back
     if back_cmd == usr_cmd_input {
@@ -95,6 +98,9 @@ pub fn access_dir(directory: Directory) {
         print_index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
+    // TESTING
+    } else if test_cmd == usr_cmd_input {
+        return_home_dir_path();
     // provided input Invalid!
     } else {
         println!("Invalid command entered. Aborting.");
@@ -132,17 +138,28 @@ fn path_existence_and_creator(path: PathBuf) -> bool {
 }
 
 fn check_string_into_path(input: String) -> std::io::Result<PathBuf> {
-    let path_to_test = Path::new(&input);
-    // if this check returns true; the Input can be used without any more modification.
-    let test_answer = canon(path_to_test.to_path_buf());
-    match test_answer {
-        Ok(returned_absolute_path) => {
-            return Ok(returned_absolute_path);
-        }
-        Err(an_error) => {
-            return Err(an_error);
+    if input.starts_with("~") {
+        let stripped_input = input.trim_start_matches("~").to_string();
+        let test = PathBuf::from(stripped_input);
+        let usr_home_dir = return_home_dir_path();
+        let test2 = usr_home_dir.join(test);
+        println!("Debug: {:?}", test2);
+        println!("Debug home: {:?}", usr_home_dir);
+        return Ok(test2);
+    } else {
+        let path_to_test = Path::new(&input);
+        // if this check returns true; the Input can be used without any more modification.
+        let test_answer = canon(path_to_test.to_path_buf());
+        match test_answer {
+            Ok(returned_absolute_path) => {
+                return Ok(returned_absolute_path);
+            }
+            Err(an_error) => {
+                return Err(an_error);
+            }
         }
     }
+
 }
 
 fn check_existance_dir(path: PathBuf) -> bool {
@@ -254,10 +271,16 @@ fn print_example_dir() {
     println!("Your example path: {path}");
 }
 
+fn print_example_home_shortcut() {
+    println!("Type: '~' to access your home directory. e.g. '~ExampleDirectory' ")
+}
+
 pub fn usr_cd() -> Result<Directory, io::Error> {
     print_example_dir();
+    print_example_home_shortcut();
     let usr_input = get_usr_cmd_input("Please enter a path.");
-    let output = Directory::open_dir(usr_input.as_str());
+    let temp = check_string_into_path(usr_input).unwrap();
+    let output = Directory::open_dir(temp.as_os_str().to_str().unwrap());
     return output;
 }
 
@@ -274,4 +297,12 @@ pub fn get_usr_cmd_input(prompt: &str) -> String {
             return invalid_input;
         },
     }
+}
+
+fn return_home_dir_path() -> PathBuf {
+    // This home_dir is different from the env::home_dir one. The latter is depricated the former
+    // is not. Why? Fuck me thats why!
+    let usr_dir: PathBuf = home_dir().unwrap();
+    return usr_dir;
+    
 }
