@@ -24,24 +24,18 @@ fn main() {
         if app {
             break;  
         }
-
         print::welcome_msg();
         // print possible commands
         print::keybinds_main_menu();
-        
         // now main usr input loop
         // WIP: there needs to be more usr input validation than trailing whitespace removal;
         // Remeber: all user input is hostile
         let usr_cmd = access::get_usr_cmd_input("Please enter a command:");
-        let _err_decode_string = "Invalid command".to_owned();
-        let _cd = "cd".to_owned();
-        let _quit = "q".to_owned();
-
-        if usr_cmd == _err_decode_string {
-            println!("Invalid command '{usr_cmd}' entered. Aborting.");
-        } else if usr_cmd == _quit {
+        let cd = "cd".to_owned();
+        let quit = "q".to_owned();
+        if usr_cmd == quit {
             app = true;
-        } else if usr_cmd == _cd {
+        } else if usr_cmd == cd {
             println!("-----------------------");
             let usr_cd_input = access::usr_cd();
             match usr_cd_input {

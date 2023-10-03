@@ -117,10 +117,8 @@ pub fn access_dir(directory: Directory) {
 }
 
 fn yn_decoder(input: String) -> bool {
-    if input == "Yes".to_owned() || input == "Y".to_owned() || input == "y".to_owned() {
+    if input == "Yes".to_owned() || input == "yes".to_owned() || input == "Y".to_owned() || input == "y".to_owned() {
         true
-    } else if input == "No".to_owned() || input == "N".to_owned() || input == "n".to_owned() {
-        false
     } else {
         false
     }
@@ -202,9 +200,7 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
     for index in split_file_list {
         if index.contains("-") {
             let start_end_vec = index.split("-").collect::<Vec<&str>>();
-            
             let [start_str, end_str] = start_end_vec[..] else { todo!()};
-
             let start = check_str_into_pos_int(start_str)?;
             let end = check_str_into_pos_int(end_str)?;
             for n in start..=end {
