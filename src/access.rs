@@ -68,7 +68,7 @@ pub fn access_dir(directory: Directory) {
         } else {
             return;
         };
-    // WIP move files -> means DELETION of files. Do this last.
+    // move files -> means DELETION of files.
     } else if move_cmd == usr_cmd_input {
         print::index_example();
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
@@ -182,10 +182,62 @@ pub fn access_dir(directory: Directory) {
         }
         // Failsafe
         return;
-    // WIP move AND rename files
+    // move AND rename files
     } else if move_rename_cmd == usr_cmd_input || move_rename_cmd_alt == usr_cmd_input {
+        let mut copy_success = false;
+        // first I just copy
         print::index_example();
-        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+            Ok(index_list) => {index_list},
+            Err(any_err) => {
+                println!("Error {any_err} encountered. Aborting step.");
+                return;
+            },
+        };
+        print::example_dir();
+        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
+        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
+            Ok(ok_path) => {ok_path},
+            Err(any_err) => {
+                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
+                    PathBuf::from(copy_to_dir)
+                } else {
+                    println!("Error {any_err} encountered. Aborting step.");
+                    return;
+                }
+            },
+        };
+        // TODO: This is wierd and needs a rework
+        if path_existence_and_creator(copy_dir_decoded.clone()) {
+            // Actual copying
+            copy::move_loop(directory, index_list, copy_dir_decoded.clone());
+            copy_success = true;
+        }
+        // NOW I move to rename
+        // first sanity check if copy was done.
+        if copy_success {
+            let new_dir = Directory::open_dir(&copy_dir_decoded.as_os_str().to_str().unwrap()).unwrap();
+            println!("-----------------------");
+            println!("The directory contains:");
+            new_dir.print_contents_in_usr_format();
+            print::index_example();
+            let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+            let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+                Ok(index_list) => {index_list},
+                Err(any_err) => {
+                    println!("Error {any_err} encountered. Aborting step.");
+                    return;
+                },
+            };
+            print::rename_schema_example();
+            let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
+            rename::rename_loop(new_dir, index_list, usr_scheme_input);
+            println!("Copy and renaming successful. Returning to main menu.");
+            println!("-------------------------------------------");
+            return;
+        }
+        // Failsafe
         return;
     // TESTING
     } else if test_cmd == usr_cmd_input {
