@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 
 // Now comes the real meat of Janus, the file interaction.
 // copy, move, rename, mkdir
-// choosen by a full usr provided list, add x..z or x-z functionality later
+// choosen by a full usr provided list
 
 // Main Function
 pub fn access_dir(directory: Directory) {
@@ -233,8 +233,6 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
     }
     Ok(fn_output)
 }
-
-// General functions
 
 fn remove_all_whitespace(string: String) -> String {
     let input_str = string.as_str();

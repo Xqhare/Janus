@@ -29,7 +29,7 @@ fn main() {
         print_keybinds();
         
         // now main usr input loop
-        // TODO: there needs to be more usr input validation than trailing whitespace removal;
+        // WIP: there needs to be more usr input validation than trailing whitespace removal;
         // Remeber: all user input is hostile
         let usr_cmd = access::get_usr_cmd_input("Please enter a command:");
         let _err_decode_string = "Invalid command".to_owned();

@@ -1,4 +1,4 @@
-use std::{path::{Path}, fs};
+use std::{path::Path, fs};
 use Into;
 
 // we need a way to enter a renaming scheme, decode it, and implement it for every file.
@@ -41,7 +41,6 @@ fn make_rename_scheme(usr_scheme: String, file_indexes: Vec<usize>) -> Result<Ve
 }
 
 // REMEMBER ONLY PASS IN FINISHED ABSOLTE PATHS
-
 fn rename_single_file<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> std::io::Result<()> {
     fs::rename(from, to)?;
     Ok(())
