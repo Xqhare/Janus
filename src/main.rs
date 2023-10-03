@@ -12,6 +12,7 @@ mod access;
 mod mkdir;
 mod rename;
 mod copy;
+mod print;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
@@ -24,9 +25,9 @@ fn main() {
             break;  
         }
 
-        print_welcome_msg();
+        print::welcome_msg();
         // print possible commands
-        print_keybinds();
+        print::keybinds_main_menu();
         
         // now main usr input loop
         // WIP: there needs to be more usr input validation than trailing whitespace removal;
@@ -56,19 +57,6 @@ fn main() {
             println!("Invalid command entered. Aborting.");
         }
     }
-}
-
-fn print_welcome_msg() {
-    println!("------------------------------------------------");
-    println!("Welcome to Janus Version: {VERSION} by {AUTHORS}");
-    println!("------------------------------------------------");
-}
-
-fn print_keybinds() {
-    println!("Commands:");
-    println!("[q]uit = q");
-    println!("[c]hange [d]irectory = cd");
-    println!("-------------------------")
 }
 
 fn panic_quit() {

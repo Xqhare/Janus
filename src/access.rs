@@ -1,6 +1,7 @@
 use crate::directory::Directory;
 use crate::mkdir;
 use crate::copy;
+use crate::print;
 use home::home_dir;
 use std::io::{self};
 use std::num::ParseIntError;
@@ -15,7 +16,7 @@ pub fn access_dir(directory: Directory) {
     println!("-----------------------");
     println!("The directory contains:");
     directory.print_contents_in_usr_format();
-    print_keybinds();
+    print::keybinds_cd_menu();
     let usr_cmd_input = get_usr_cmd_input("Please enter a command:");
     let back_cmd = "b".to_string();
     let copy_cmd = "c".to_string();
@@ -34,8 +35,7 @@ pub fn access_dir(directory: Directory) {
         return ;
     // copy files
     } else if copy_cmd == usr_cmd_input {
-        println!("-----------------------");
-        print_index_example();
+        print::index_example();
         let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
             Ok(index_list) => {index_list},
@@ -44,8 +44,7 @@ pub fn access_dir(directory: Directory) {
                 return;
             },
         };
-        println!("-----------------------");
-        print_example_dir();
+        print::example_dir();
         let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
         let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
             Ok(ok_path) => {ok_path},
@@ -68,34 +67,29 @@ pub fn access_dir(directory: Directory) {
         };
     // WIP move files -> means DELETION of files. Do this last.
     } else if move_cmd == usr_cmd_input {
-        println!("-----------------------");
-        print_index_example();
+        print::index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // WIP rename files
     } else if rename_cmd == usr_cmd_input {
-        println!("-----------------------");
-        print_index_example();
+        print::index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // make directory
     } else if mkdir_cmd == usr_cmd_input {
-        println!("-----------------------");
-        print_example_dir();
+        print::example_dir();
         let new_dir_path: String = get_usr_cmd_input("Please enter the path of the directory you want to create.");
         let parsed_path = Path::new(&new_dir_path);
         let _ignore_error = mkdir::create_dir(parsed_path);
         return;
     // WIP copy AND rename files
     } else if copy_rename_cmd == usr_cmd_input || copy_rename_cmd_alt == usr_cmd_input {
-        println!("-----------------------");
-        print_index_example();
+        print::index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // WIP move AND rename files
     } else if move_rename_cmd == usr_cmd_input || move_rename_cmd_alt == usr_cmd_input {
-        println!("-----------------------");
-        print_index_example();
+        print::index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
     // TESTING
@@ -175,14 +169,6 @@ fn canon(path: PathBuf) -> std::io::Result<PathBuf> {
     return Ok(out);
 }
 
-fn print_index_example() {
-    // 'a, b-f, g..m, m/w, w, x,y,z' -> returns abc
-    println!("Index entry has to follow this format:");
-    println!("1, 2-4, 5..7, 7/9, 9,10");
-    println!("',' between the indicies; 2-4 & 5..7 = inclusive; 7/9 = exclusive; Spaces don't matter");
-    println!("--------------------------------------------------------------------------------------")
-}
-
 // This function takes in a usr provided String, containing numbers in the following format:
     // 'a, b-f, g..m, m/w, w, x,y,z' -> returns abc
 // - 'a' = singles
@@ -249,33 +235,9 @@ fn check_str_into_pos_int(to_check: &str) -> Result<usize, ParseIntError> {
     let number: usize = to_check.parse()?;
     return Ok(number);
 }
-
-fn print_keybinds() {
-    // back, copy, move, rename, make directory, copy-rename, move-rename
-    println!("Commands:");
-    println!("[b]ack = b");
-    println!("[c]opy = c");
-    println!("[m]ove = m");
-    println!("[r]ename = r");
-    println!("[m]a[k]e [dir]ectory = mkdir");
-    println!("[C/c]opy & [r]ename = cr / C");
-    println!("[M/m]ove & [r]ename = mr / M");
-    println!("----------------------------")
-}
-
-fn print_example_dir() {
-    let path_temp = Directory::current_dir().unwrap();
-    let path = Directory::pathbuf_into_string(path_temp);
-    println!("Your example path: {path}");
-}
-
-fn print_example_home_shortcut() {
-    println!("Type: '~' to access your home directory. e.g. '~ExampleDirectory' ")
-}
-
 pub fn usr_cd() -> Result<Directory, io::Error> {
-    print_example_dir();
-    print_example_home_shortcut();
+    print::example_dir();
+    print::example_home_shortcut();
     let usr_input = get_usr_cmd_input("Please enter a path.");
     let temp = check_string_into_path(usr_input).unwrap();
     let output = Directory::open_dir(temp.as_os_str().to_str().unwrap());
@@ -302,5 +264,4 @@ fn return_home_dir_path() -> PathBuf {
     // is not. Why? Fuck me thats why!
     let usr_dir: PathBuf = home_dir().unwrap();
     return usr_dir;
-    
 }
