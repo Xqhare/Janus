@@ -9,7 +9,7 @@ use crate::directory::{self, Directory};
 // extract current name and extension, paste them on the new module_path!
 // run fs::copy(old, new)?;
 
-fn new_full_path(path: &PathBuf, name_with_extension: OsString) -> PathBuf {
+pub fn new_full_path(path: &PathBuf, name_with_extension: OsString) -> PathBuf {
     let mut output: PathBuf = path.to_path_buf();
     let temp_path = Path::new(&name_with_extension);
     output.push(temp_path);

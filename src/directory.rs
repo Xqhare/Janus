@@ -93,4 +93,9 @@ impl Directory {
         }
         output
     }
+
+    pub fn return_dir_path(&self) -> PathBuf {
+        let output = &self.path;
+        return output.clone();
+    }
 }

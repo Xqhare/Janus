@@ -47,3 +47,7 @@ pub fn example_home_shortcut() {
     println!("Type: '~' to access your home directory. e.g. '~ExampleDirectory' ")
 }
 
+pub fn rename_schema_example() {
+    println!("Please enter your schema like this:");
+    println!("'Totaly awesome Name', index, creation time");
+}

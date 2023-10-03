@@ -30,7 +30,7 @@ impl From<DirEntry> for File {
             path: dir_entry.path(),
             file_extension: {
                 //God this is stupid; I love it!
-                let test1 = OsString::from("None");
+                let test1 = OsString::from("");
                 let test2 = test1.as_os_str();
                 dir_entry.path().extension().unwrap_or(test2).to_os_string()
             },
@@ -80,6 +80,11 @@ impl File {
         let name = &self.name_ref;
         let output = name.to_os_string();
         return output;
+    }
+
+    pub fn return_extension(&self) -> OsString {
+        let output = &self.file_extension;
+        return output.clone();
     }
 
     pub fn debug_print_all(&self) {

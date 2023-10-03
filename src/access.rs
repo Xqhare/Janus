@@ -2,6 +2,7 @@ use crate::directory::Directory;
 use crate::mkdir;
 use crate::copy;
 use crate::print;
+use crate::rename;
 use home::home_dir;
 use std::io::{self};
 use std::num::ParseIntError;
@@ -19,6 +20,7 @@ pub fn access_dir(directory: Directory) {
     print::keybinds_cd_menu();
     let usr_cmd_input = get_usr_cmd_input("Please enter a command:");
     let back_cmd = "b".to_string();
+    let back_cmd_alt = "q".to_string();
     let copy_cmd = "c".to_string();
     let move_cmd = "m".to_string();
     let rename_cmd = "r".to_string();
@@ -31,7 +33,7 @@ pub fn access_dir(directory: Directory) {
     let test_cmd = "t".to_string();
 
     // go back
-    if back_cmd == usr_cmd_input {
+    if back_cmd == usr_cmd_input || back_cmd_alt == usr_cmd_input {
         return ;
     // copy files
     } else if copy_cmd == usr_cmd_input {
@@ -70,10 +72,22 @@ pub fn access_dir(directory: Directory) {
         print::index_example();
         let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
         return;
-    // WIP rename files
+    // rename files
     } else if rename_cmd == usr_cmd_input {
         print::index_example();
-        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+            Ok(index_list) => {index_list},
+            Err(any_err) => {
+                println!("Error {any_err} encountered. Aborting step.");
+                return;
+            },
+        };
+        print::rename_schema_example();
+        let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
+        rename::rename_loop(directory, index_list, usr_scheme_input);
+        println!("Copying successful. Returning to main menu.");
+        println!("-------------------------------------------");
         return;
     // make directory
     } else if mkdir_cmd == usr_cmd_input {
