@@ -87,6 +87,17 @@ impl File {
         return output.clone();
     }
 
+    pub fn is_file(&self) -> bool {
+        let output = &self.is_file;
+        // the * has something to do with pointers.
+        return *output;
+    }
+
+    pub fn is_dir(&self) -> bool {
+        let output = &self.is_dir;
+        return output.clone();
+    }
+
     pub fn debug_print_all(&self) {
         // FILENAME
         let dir_entry_file_name = &self.name;

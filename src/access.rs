@@ -31,6 +31,7 @@ pub fn access_dir(directory: Directory) {
     // NOT EXPOSED TO UI
     let test_cmd = "t".to_string();
     let back_cmd_alt = "q".to_string();
+    // There has to be a better way of doing this; I just don't know how.
     // go back
     if back_cmd == usr_cmd_input || back_cmd_alt == usr_cmd_input {
         return ;
@@ -70,8 +71,36 @@ pub fn access_dir(directory: Directory) {
     // WIP move files -> means DELETION of files. Do this last.
     } else if move_cmd == usr_cmd_input {
         print::index_example();
-        let _usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-        return;
+        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+            Ok(index_list) => {index_list},
+            Err(any_err) => {
+                println!("Error {any_err} encountered. Aborting step.");
+                return;
+            },
+        };
+        print::example_dir();
+        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
+        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
+            Ok(ok_path) => {ok_path},
+            Err(any_err) => {
+                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
+                    PathBuf::from(copy_to_dir)
+                } else {
+                    println!("Error {any_err} encountered. Aborting step.");
+                    return;
+                }
+            },
+        };
+        // TODO: This is wierd and needs a rework
+        if path_existence_and_creator(copy_dir_decoded.clone()) {
+            // Actual copying
+            copy::move_loop(directory, index_list, copy_dir_decoded);
+            println!("Moving successful. Returning to main menu.");
+            println!("-------------------------------------------");
+        } else {
+            return;
+        };
     // rename files
     } else if rename_cmd == usr_cmd_input {
         print::index_example();
