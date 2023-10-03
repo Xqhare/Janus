@@ -12,7 +12,7 @@ pub struct Directory {
 
 impl Directory {
     pub fn open_dir(dir_path: &str) -> Result<Self, io::Error> {
-        let dir_entries = Self::get_dir_entries(&dir_path);
+        let dir_entries = Self::get_dir_entries(dir_path);
         //Error handling
         match dir_entries {
             Ok(dir_entires) => {
@@ -26,7 +26,7 @@ impl Directory {
                     dir_files.push(new_file);
                     index += 1;
                 }
-                Ok(Self { 
+                return Ok(Self { 
                     files: dir_files,
                     file_index: index,
                     path: this_path,
@@ -52,16 +52,14 @@ impl Directory {
         Ok(path)
     }
 
-    pub fn print_dir(&self) {
-        for file in &self.files {
-            let file = &file;
-            let _print = File::debug_print_all(&file);
-        }
+    pub fn return_file_index(&self) -> usize {
+        let output = &self.file_index;
+        *output
     }
 
     pub fn pathbuf_into_string(path: PathBuf) -> String {
         let path_as_string: String = path.as_os_str().to_string_lossy().into_owned();
-        return path_as_string;
+        path_as_string
     }
 
     pub fn print_contents_in_usr_format(&self) {
@@ -77,11 +75,6 @@ impl Directory {
             println!("==================");
             file_index += 1;
         }
-    }
-
-    pub fn file_at_index(&self, index: usize) -> &File {
-        let output = &self.files.get(index).unwrap();
-        output
     }
 
     pub fn return_all_files(self) -> Vec<file::File> {

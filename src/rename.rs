@@ -1,5 +1,4 @@
 use std::{path::{Path, PathBuf}, fs, ffi::OsString};
-use Into;
 
 use crate::{directory::Directory, copy};
 

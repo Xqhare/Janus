@@ -2,8 +2,13 @@
     dir_entry_ext2,
     allocator_api,
     )]
+#![warn(clippy::all, clippy::pedantic, clippy::restriction)]
 #![allow(
-    dead_code,
+    clippy::explicit_counter_loop,
+    clippy::redundant_else,
+    clippy::blanket_clippy_restriction_lints,
+    clippy::missing_docs_in_private_items,
+    clippy::missing_safety_doc,
 )]
 
 mod directory;
@@ -51,8 +56,4 @@ fn main() {
             println!("Invalid command entered. Aborting.");
         }
     }
-}
-
-fn panic_quit() {
-    panic!("Janus paniced! E001")
 }

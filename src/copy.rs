@@ -1,5 +1,5 @@
 use std::ffi::OsString;
-use std::fs::{self};
+use std::fs;
 use std::path::{PathBuf, Path};
 
 use crate::file;

@@ -4,7 +4,7 @@ use crate::copy;
 use crate::print;
 use crate::rename;
 use home::home_dir;
-use std::io::{self};
+use std::io;
 use std::num::ParseIntError;
 use std::path::{Path, PathBuf};
 
@@ -242,6 +242,11 @@ pub fn access_dir(directory: Directory) {
     // TESTING
     } else if test_cmd == usr_cmd_input {
         return_home_dir_path();
+        let debug1 = directory.return_file_index();
+        println!("debug {:?}", debug1);
+        for entry in directory.return_all_files() {
+            entry.debug_print_all();
+        }
     // provided input Invalid!
     } else {
         println!("Invalid command entered. Aborting.");
