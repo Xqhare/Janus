@@ -13,7 +13,7 @@ pub fn new_full_path(path: &PathBuf, name_with_extension: OsString) -> PathBuf {
     let mut output: PathBuf = path.clone();
     let temp_path = Path::new(&name_with_extension);
     output.push(temp_path);
-    return output.clone()
+    output.clone()
 }
 
 fn copy_single_file(old: PathBuf, new: PathBuf) {

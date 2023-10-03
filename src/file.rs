@@ -73,29 +73,29 @@ impl File {
 
     pub fn return_path(&self) -> PathBuf {
         let output = &self.path;
-        output.clone()
+        return output.clone()
     }
 
     pub fn return_name_and_extension(&self) -> OsString {
         let name = &self.name_ref;
         
-        return name.clone()
+        name.clone()
     }
 
     pub fn return_extension(&self) -> OsString {
         let output = &self.file_extension;
-        output.clone()
+        return output.clone()
     }
 
     pub fn is_file(&self) -> bool {
         let output = &self.is_file;
         // the * has something to do with pointers.
-        *output
+        return *output
     }
 
     pub fn is_dir(&self) -> bool {
         let output = &self.is_dir;
-        return *output
+        *output
     }
 
     pub fn debug_print_all(&self) {

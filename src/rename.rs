@@ -66,11 +66,11 @@ fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsSt
     temp_name.push('.');
     temp_name.push_str(extension.as_os_str().to_str().unwrap());
     let output_name = OsString::from(temp_name);
-    Ok(output_name)
+    return Ok(output_name)
 }
 
 // REMEMBER ONLY PASS IN FINISHED ABSOLTE PATHS
 fn rename_single_file<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> std::io::Result<()> {
     fs::rename(from, to)?;
-    return Ok(())
+    Ok(())
 }

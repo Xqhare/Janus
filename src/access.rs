@@ -254,7 +254,7 @@ pub fn access_dir(directory: Directory) {
 }
 
 fn yn_decoder(input: String) -> bool {
-    input == *"Yes" || input == *"yes" || input == *"Y" || input == *"y"
+    return input == *"Yes" || input == *"yes" || input == *"Y" || input == *"y"
 }
 
 fn path_existence_and_creator(path: PathBuf) -> bool {
@@ -262,16 +262,16 @@ fn path_existence_and_creator(path: PathBuf) -> bool {
         // If path exists, continue, if not ask usr for consent to create it.
         if check_existance_dir(path_to_test) {
             // Path exists
-            true
+            return true
         } else {
             // Path DOESNT exist
             let usr_answer = get_usr_cmd_input("Choosen path does not exist. Do you want to create it? y/n");
             let usr_answer_decoded = yn_decoder(usr_answer);
             if !usr_answer_decoded {
-                false
+                return false
             } else {
                 let _ = mkdir::create_dir(path.as_path());
-                true
+                return true
             }
         }
 }
@@ -282,23 +282,23 @@ fn check_string_into_path(input: String) -> std::io::Result<PathBuf> {
         let stripped_input_path = PathBuf::from(stripped_input);
         let usr_home_dir = return_home_dir_path();
         let output_path = usr_home_dir.join(stripped_input_path);
-        Ok(output_path)
+        return Ok(output_path)
     } else {
         let path_to_test = Path::new(&input);
         // if this check returns true; the Input can be used without any more modification.
         
-        return canon(path_to_test.to_path_buf())
+        canon(path_to_test.to_path_buf())
     }
 
 }
 
 fn check_existance_dir(path: PathBuf) -> bool {
-    path.exists()
+    return path.exists()
 }
 
 fn canon(path: PathBuf) -> std::io::Result<PathBuf> {
     let out = path.canonicalize()?;
-    Ok(out)
+    return Ok(out)
 }
 
 // This function takes in a usr provided String, containing numbers in the following format:
@@ -347,7 +347,7 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
             fn_output.push(single_index);
         }
     }
-    return Ok(fn_output)
+    Ok(fn_output)
 }
 
 fn remove_all_whitespace(string: String) -> String {
@@ -358,12 +358,12 @@ fn remove_all_whitespace(string: String) -> String {
             output_string.push(char);
         }
     }
-    return output_string
+    output_string
 }
 
 fn check_str_into_pos_int(to_check: &str) -> Result<usize, ParseIntError> {
     let number: usize = to_check.parse()?;
-    Ok(number)
+    return Ok(number)
 }
 pub fn usr_cd() -> Result<Directory, io::Error> {
     print::example_dir();
@@ -371,7 +371,7 @@ pub fn usr_cd() -> Result<Directory, io::Error> {
     let usr_input = get_usr_cmd_input("Please enter a path.");
     let temp = check_string_into_path(usr_input).unwrap();
     let output = Directory::open_dir(temp.as_os_str().to_str().unwrap());
-    output
+    return output
 }
 
 pub fn get_usr_cmd_input(prompt: &str) -> String {
@@ -380,11 +380,11 @@ pub fn get_usr_cmd_input(prompt: &str) -> String {
     match io::stdin().read_line(&mut input) {
         Ok(_input_already_pushed_into_inputvar) => {
             let output = input.trim().to_owned();
-            output
+            return output
         },
         Err(_input_clearly_invalid) => {
             
-            return "Invalid command".to_owned()
+            "Invalid command".to_owned()
         },
     }
 }
@@ -393,5 +393,5 @@ fn return_home_dir_path() -> PathBuf {
     // This home_dir is different from the env::home_dir one. The latter is depricated the former
     // is not. Why? Fuck me thats why!
     let usr_dir: PathBuf = home_dir().unwrap();
-    usr_dir
+    return usr_dir
 }

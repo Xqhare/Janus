@@ -26,7 +26,7 @@ impl Directory {
                     dir_files.push(new_file);
                     index += 1;
                 }
-                Ok(Self { 
+                return Ok(Self { 
                     files: dir_files,
                     file_index: index,
                     path: this_path,
@@ -44,22 +44,22 @@ impl Directory {
             let dir_entry = dir_entry?;
             dir_entries.push(dir_entry);
         }
-        return Ok(dir_entries)
+        Ok(dir_entries)
     }
 
     pub fn current_dir() -> std::io::Result<PathBuf> {
         let path = env::current_dir()?;
-        return Ok(path)
+        Ok(path)
     }
 
     pub fn return_file_index(&self) -> usize {
         let output = &self.file_index;
-        return *output
+        *output
     }
 
     pub fn pathbuf_into_string(path: PathBuf) -> String {
         let path_as_string: String = path.as_os_str().to_string_lossy().into_owned();
-        return path_as_string
+        path_as_string
     }
 
     pub fn print_contents_in_usr_format(&self) {
@@ -84,11 +84,11 @@ impl Directory {
             let test = entry;
             output.push(test);
         }
-        return output
+        output
     }
 
     pub fn return_dir_path(&self) -> PathBuf {
         let output = &self.path;
-        output.clone()
+        return output.clone()
     }
 }
