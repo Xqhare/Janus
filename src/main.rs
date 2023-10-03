@@ -49,7 +49,7 @@ fn main() {
                     // Now comes the real meat of Janus, the file interaction.
                 },
                 _ => {
-                    println!("Invalid command entered. Aborting.")
+                    println!("Invalid command entered. Aborting.");
                 },
             }
         } else {

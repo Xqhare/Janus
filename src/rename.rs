@@ -38,18 +38,18 @@ fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsSt
     if usr_scheme.len() <= 0 {
         return Err(Into::into(std::io::ErrorKind::InvalidInput))
     }
-    if !usr_scheme.contains(",") {
+    if !usr_scheme.contains(',') {
         return Err(Into::into(std::io::ErrorKind::InvalidInput))
     }
     if !usr_scheme.contains("index") {
         return Err(Into::into(std::io::ErrorKind::InvalidInput))
     }
     // Actual decoding
-    let split_usr_scheme = usr_scheme.split(",");
+    let split_usr_scheme = usr_scheme.split(',');
     let mut temp_name = String::new();
     for entry in split_usr_scheme {
-        if entry.contains("'") {
-            let test = entry.replace("'", "");
+        if entry.contains('\'') {
+            let test = entry.replace('\'', "");
             temp_name.push_str(test.as_str());
         } else if entry.contains("index") {
             let index = counter.to_string();
@@ -63,14 +63,14 @@ fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsSt
         }
     }
     // extension is without leading .; so it is added back here.
-    temp_name.push_str(".");
+    temp_name.push('.');
     temp_name.push_str(extension.as_os_str().to_str().unwrap());
     let output_name = OsString::from(temp_name);
-    return Ok(output_name);
+    Ok(output_name)
 }
 
 // REMEMBER ONLY PASS IN FINISHED ABSOLTE PATHS
 fn rename_single_file<P: AsRef<Path>, Q: AsRef<Path>>(from: P, to: Q) -> std::io::Result<()> {
     fs::rename(from, to)?;
-    Ok(())
+    return Ok(())
 }

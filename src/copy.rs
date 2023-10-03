@@ -10,17 +10,17 @@ use crate::directory::{self, Directory};
 // run fs::copy(old, new)?;
 
 pub fn new_full_path(path: &PathBuf, name_with_extension: OsString) -> PathBuf {
-    let mut output: PathBuf = path.to_path_buf();
+    let mut output: PathBuf = path.clone();
     let temp_path = Path::new(&name_with_extension);
     output.push(temp_path);
-    return output.to_path_buf();
+    return output.clone()
 }
 
 fn copy_single_file(old: PathBuf, new: PathBuf) {
     if old != new {
         let _success = match fs::copy(old, new) {
             Ok(anything) => {anything},
-            Err(any_err) => {panic!("Encountered Error {:?} during copy. Aborting C500", any_err)}
+            Err(any_err) => {panic!("Encountered Error {any_err:?} during copy. Aborting C500")}
         };
     } else {
         panic!("Old and new copy path are equal. Aborting C501")
@@ -43,7 +43,7 @@ pub fn copy_loop(provided_directory: Directory, provided_index_list: Vec<usize>,
             let old_name = file::File::return_path(&entry);
             let name_with_extension = file::File::return_name_and_extension(&entry);
             let new_name = new_full_path(&provided_new_path, name_with_extension);
-            copy_single_file(old_name, new_name)
+            copy_single_file(old_name, new_name);
         }
     counter += 1;
     }
@@ -73,10 +73,10 @@ pub fn move_loop(provided_directory: Directory, provided_index_list: Vec<usize>,
                 fs::remove_dir(old_name.as_path()).unwrap();
             } else if file::File::is_file(&entry) {
                 // its a file to be remove
-                let _ = fs::remove_file(old_name.as_path()).expect("Somethhing went terribly wrong. C511");
+                let () = fs::remove_file(old_name.as_path()).expect("Somethhing went terribly wrong. C511");
             } else {
                 // Fallback and Feelgood Option; just try to remove with file_remove
-                let _ = fs::remove_file(old_name.as_path()).expect("Somethhing went terribly wrong. C512");
+                let () = fs::remove_file(old_name.as_path()).expect("Somethhing went terribly wrong. C512");
             }
         }
     counter += 1;

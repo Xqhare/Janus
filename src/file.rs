@@ -24,7 +24,7 @@ pub struct File {
 
 impl From<DirEntry> for File {
     fn from(dir_entry: DirEntry) -> Self {
-        Self { 
+        return Self { 
             name: dir_entry.file_name(),
             name_ref: dir_entry.path().file_name().unwrap().to_os_string(),
             path: dir_entry.path(),
@@ -61,81 +61,81 @@ impl File {
     pub fn print_dir_file_symlink(&self) {
         if self.is_dir {
             let file_type = "Directory".to_string();
-            println!("Type: {}", file_type)
+            println!("Type: {file_type}");
         } else if self.is_file {
             let file_type = "File".to_string();
-            println!("Type: {}", file_type)
+            println!("Type: {file_type}");
         } else {
             let file_type = "Systemlink".to_string();
-            println!("Type: {}", file_type)
+            println!("Type: {file_type}");
         }
     }
 
     pub fn return_path(&self) -> PathBuf {
         let output = &self.path;
-        output.to_path_buf()
+        output.clone()
     }
 
     pub fn return_name_and_extension(&self) -> OsString {
         let name = &self.name_ref;
-        let output = name.to_os_string();
-        return output;
+        
+        return name.clone()
     }
 
     pub fn return_extension(&self) -> OsString {
         let output = &self.file_extension;
-        return output.clone();
+        output.clone()
     }
 
     pub fn is_file(&self) -> bool {
         let output = &self.is_file;
         // the * has something to do with pointers.
-        return *output;
+        *output
     }
 
     pub fn is_dir(&self) -> bool {
         let output = &self.is_dir;
-        return output.clone();
+        return *output
     }
 
     pub fn debug_print_all(&self) {
         // FILENAME
         let dir_entry_file_name = &self.name;
-        println!("FILE NAME: {:?}", dir_entry_file_name);
+        println!("FILE NAME: {dir_entry_file_name:?}");
         let dir_entry_file_name_ref = &self.name_ref;
-        println!("FILE NAME REF: {:?}", dir_entry_file_name_ref);
+        println!("FILE NAME REF: {dir_entry_file_name_ref:?}");
         // PATH
         let dir_entry_path = &self.path;
-        println!("PATH: {:?}", dir_entry_path);
+        println!("PATH: {dir_entry_path:?}");
         // GET FILETYPE
         let dir_entry_filetype = &self.file_extension;
-        println!("FILE TYPE: {:?}", dir_entry_filetype);
+        println!("FILE TYPE: {dir_entry_filetype:?}");
         // GET  PERMISSIONS
         let dir_entry_permissions = &self.permissions;
-        println!("dir_entry_permissions: {:?}", dir_entry_permissions);
+        println!("dir_entry_permissions: {dir_entry_permissions:?}");
         // GET IS_DIR BOOLEAN
         let dir_entry_is_dir_bool = self.is_dir;
-        println!("dir_entry_is_dir_bool: {:?}", dir_entry_is_dir_bool);
+        println!("dir_entry_is_dir_bool: {dir_entry_is_dir_bool:?}");
         // GET IS_SYMLINK BOOL
         let dir_entry_is_symlink_bool = self.is_symlink;
-        println!("dir_entry_is_symlink_bool: {:?}", dir_entry_is_symlink_bool);
+        println!("dir_entry_is_symlink_bool: {dir_entry_is_symlink_bool:?}");
         // GET IS_FILE BOOL
         let dir_entry_is_file_bool = self.is_file;
-        println!("dir_entry_is_file_bool: {:?}", dir_entry_is_file_bool);
+        println!("dir_entry_is_file_bool: {dir_entry_is_file_bool:?}");
         // GET METADATA FILETYPE
         let dir_entry_meta_filetype = &self.meta_filetype;
-        println!("dir_entry_meta_filetype: {:?}", dir_entry_meta_filetype);
+        println!("dir_entry_meta_filetype: {dir_entry_meta_filetype:?}");
         // GET Byte LEN of file
         let dir_entry_byte_len = self.byte_len;
-        println!("dir_entry_len: {:?}", dir_entry_byte_len);
+        println!("dir_entry_len: {dir_entry_byte_len:?}");
         // GET ACCESSED TIME
         let dir_entry_accessed = &self.time_accessed;
-        println!("dir_entry_accessed: {:?}", dir_entry_accessed);
+        println!("dir_entry_accessed: {dir_entry_accessed:?}");
         // GET CREATED TIME
         let dir_entry_created = &self.time_created;
-        println!("dir_entry_created: {:?}", dir_entry_created);
+        println!("dir_entry_created: {dir_entry_created:?}");
         // GET MODIFIED TIME
         let dir_entry_modified = &self.time_modified;
-        println!("dir_entry_modified: {:?}", dir_entry_modified);
+        println!("dir_entry_modified: {dir_entry_modified:?}");
     }
 }

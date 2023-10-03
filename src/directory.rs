@@ -26,7 +26,7 @@ impl Directory {
                     dir_files.push(new_file);
                     index += 1;
                 }
-                return Ok(Self { 
+                Ok(Self { 
                     files: dir_files,
                     file_index: index,
                     path: this_path,
@@ -44,22 +44,22 @@ impl Directory {
             let dir_entry = dir_entry?;
             dir_entries.push(dir_entry);
         }
-        Ok(dir_entries)
+        return Ok(dir_entries)
     }
 
     pub fn current_dir() -> std::io::Result<PathBuf> {
         let path = env::current_dir()?;
-        Ok(path)
+        return Ok(path)
     }
 
     pub fn return_file_index(&self) -> usize {
         let output = &self.file_index;
-        *output
+        return *output
     }
 
     pub fn pathbuf_into_string(path: PathBuf) -> String {
         let path_as_string: String = path.as_os_str().to_string_lossy().into_owned();
-        path_as_string
+        return path_as_string
     }
 
     pub fn print_contents_in_usr_format(&self) {
@@ -68,7 +68,7 @@ impl Directory {
         let mut file_index = 0;
         for file in &self.files {
             println!("==================");
-            println!("Index: {}", file_index);
+            println!("Index: {file_index}");
             file.print_name();
             file.print_extension();
             file.print_dir_file_symlink();
@@ -82,13 +82,13 @@ impl Directory {
         let mut output: Vec<file::File> = Vec::new();
         for entry in all_files {
             let test = entry;
-            output.push(test)
+            output.push(test);
         }
-        output
+        return output
     }
 
     pub fn return_dir_path(&self) -> PathBuf {
         let output = &self.path;
-        return output.clone();
+        output.clone()
     }
 }

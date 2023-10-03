@@ -11,7 +11,7 @@ pub fn keybinds_main_menu() {
     println!("Commands:");
     println!("[q]uit = q");
     println!("[c]hange [d]irectory = cd");
-    println!("-------------------------")
+    println!("-------------------------");
 }
 
 pub fn index_example() {
@@ -20,7 +20,7 @@ pub fn index_example() {
     println!("Index entry has to follow this format:");
     println!("1, 2-4, 5..7, 7/9, 9,10");
     println!("',' between the indicies; 2-4 & 5..7 = inclusive; 7/9 = exclusive; Spaces don't matter");
-    println!("--------------------------------------------------------------------------------------")
+    println!("--------------------------------------------------------------------------------------");
 }
 
 pub fn keybinds_cd_menu() {
@@ -33,7 +33,7 @@ pub fn keybinds_cd_menu() {
     println!("[m]a[k]e [dir]ectory = mkdir");
     println!("[C/c]opy & [r]ename = cr / C");
     println!("[M/m]ove & [r]ename = mr / M");
-    println!("----------------------------")
+    println!("----------------------------");
 }
 
 pub fn example_dir() {
@@ -44,7 +44,7 @@ pub fn example_dir() {
 }
 
 pub fn example_home_shortcut() {
-    println!("Type: '~' to access your home directory. e.g. '~ExampleDirectory' ")
+    println!("Type: '~' to access your home directory. e.g. '~ExampleDirectory' ");
 }
 
 pub fn rename_schema_example() {

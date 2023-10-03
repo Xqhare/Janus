@@ -6,5 +6,5 @@ use std::{path::Path, fs};
 // REMEMBER ONLY PASS IN FINISHED ABSOLTE PATHS
 pub fn create_dir<P: AsRef<Path>>(path: P) -> std::io::Result<()> {
     fs::create_dir_all(path)?;
-    Ok(())
+    return Ok(())
 }
