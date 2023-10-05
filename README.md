@@ -45,7 +45,7 @@ Janus does not support environmental variables.
 
 #### To launch
 
-Type '''./janus''' in your terminal.
+Type ```./janus``` in your terminal.
 If you are on windows or mac, may god help you.
 
 ## Name
