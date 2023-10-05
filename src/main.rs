@@ -9,6 +9,9 @@
     clippy::blanket_clippy_restriction_lints,
     clippy::missing_docs_in_private_items,
     clippy::missing_safety_doc,
+    clippy::panic_in_result_fn,
+    clippy::panic,
+    clippy::arithmetic_side_effects,
 )]
 
 mod directory;
