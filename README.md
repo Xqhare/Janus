@@ -1,4 +1,4 @@
-# Janus: Janus, Another Nifty Utility Script
+# Janus: Janus is A Nifty Utility Script
 
 Janus is a robust and versatile file transformation solution that enables users to steamline their file managment process. It is written in the most high-performing, scalable and reliable programming language - Rust.
 
@@ -32,9 +32,9 @@ Other benefits include:
 
 ## Getting started
 
-1. To install Jaunes, you need to have Rust installed. You can install Rust from the Rust website.
-2. Download the source.
-3. Compile the sourcecode.
+1. To install Janus, you need to have Rust installed. You can install Rust from the Rust website.
+2. Download the source-code.
+3. Compile the source-code.
 4. Launch Janus.
 
 ### Usage
