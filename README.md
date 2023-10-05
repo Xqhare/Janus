@@ -37,6 +37,11 @@ Other benefits include:
 3. Compile the source-code.
 4. Launch Janus.
 
+### Alternative (Linux users only)
+
+1. Download the executable from the releases.
+2. Launch Janus.
+
 ### Usage
 
 Follow what is written on the screen.
