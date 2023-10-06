@@ -3,6 +3,8 @@ use std::fs::{Permissions, FileType, DirEntry};
 use std::io;
 use std::time::SystemTime;
 use std::path::PathBuf;
+use chrono::offset::Utc;
+use chrono::DateTime;
 
 pub struct File {
     // General file info
@@ -97,6 +99,13 @@ impl File {
         let output = &self.is_dir;
         *output
     }
+    
+    pub fn return_creation_time_in_std_format(&self) -> DateTime<Utc> {
+        let creation_time_in_system_time = &self.time_created.as_ref().unwrap();
+        let output_date: DateTime<Utc> = (*(*creation_time_in_system_time)).into();
+        return output_date;
+
+    } 
 
     pub fn debug_print_all(&self) {
         // FILENAME

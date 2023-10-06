@@ -1,6 +1,9 @@
 use std::{path::{Path, PathBuf}, fs, ffi::OsString};
+use chrono::Utc;
+use chrono::DateTime;
 
 use crate::{directory::Directory, copy};
+
 
 pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme: String) {
     let mut counter = 0;
@@ -16,9 +19,11 @@ pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme
         if file_to_be_impacted {
             let old_path: PathBuf = entry.return_path();
             let extension = entry.return_extension();
-            let new_name_with_extension = make_new_name_from_scheme(usr_scheme.clone(), counter, extension).expect("Renaming Error C600!");
+            let creation_time:  DateTime<Utc> = entry.return_creation_time_in_std_format();
+            let new_name_with_extension = make_new_name_from_scheme(usr_scheme.clone(), counter, extension, creation_time).expect("Renaming Error C600!");
             let new_path: PathBuf = copy::new_full_path(&dir_path, new_name_with_extension);
             rename_single_file(old_path, new_path).expect("Renaming Error C601!");
+            
         }
         counter += 1;
     }
@@ -33,7 +38,7 @@ pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme
 // as last)
 //
 // More TODO: add creation_time to the scheme
-fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsString) -> Result<OsString, std::io::Error> {
+fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsString, creation_time: DateTime<Utc>) -> Result<OsString, std::io::Error> {
     // Scheme validation
     if usr_scheme.len() <= 0 {
         return Err(Into::into(std::io::ErrorKind::InvalidInput))
@@ -55,9 +60,9 @@ fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsSt
             let index = counter.to_string();
             temp_name.push_str(index.as_str());
         } else if entry.contains("creation time") {
-            // WIP
-            // here be creation time
-            return Err(Into::into(std::io::ErrorKind::InvalidInput));
+            let time = creation_time.format("%F-%T").to_string();
+            let test = time.as_str();
+            temp_name.push_str(test);
         } else {
             return Err(Into::into(std::io::ErrorKind::InvalidInput));
         }
