@@ -43,9 +43,6 @@ fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsSt
     if usr_scheme.len() <= 0 {
         return Err(Into::into(std::io::ErrorKind::InvalidInput))
     }
-    if !usr_scheme.contains(',') {
-        return Err(Into::into(std::io::ErrorKind::InvalidInput))
-    }
     if !usr_scheme.contains("index") {
         return Err(Into::into(std::io::ErrorKind::InvalidInput))
     }
