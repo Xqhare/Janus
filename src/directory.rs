@@ -91,4 +91,10 @@ impl Directory {
         let output = &self.path;
         return output.clone()
     }
+
+    pub fn return_dir_name(&self) -> String {
+        let os_str_name = &self.path.file_stem().unwrap();
+        let output = os_str_name.to_string_lossy().to_string();
+        return output;
+    }
 }

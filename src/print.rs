@@ -49,5 +49,5 @@ pub fn example_home_shortcut() {
 
 pub fn rename_schema_example() {
     println!("Please enter your schema like this:");
-    println!("'Totaly awesome Name', index, creation time");
+    println!("'Totaly awesome Name', index, creation time, dir name");
 }

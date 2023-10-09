@@ -8,7 +8,9 @@ use crate::{directory::Directory, copy};
 pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme: String) {
     let mut counter = 0;
     let dir_path: PathBuf = directory.return_dir_path();
-    for entry in Directory::return_all_files(directory) {
+    let dir_name = &directory.return_dir_name();
+    let dir_new = Directory::return_all_files(directory);
+    for entry in dir_new {
         // Check if current file is to be impacted
         let mut file_to_be_impacted: bool = false;
         for index in &file_index_list {
@@ -20,7 +22,7 @@ pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme
             let old_path: PathBuf = entry.return_path();
             let extension = entry.return_extension();
             let creation_time:  DateTime<Utc> = entry.return_creation_time_in_std_format();
-            let new_name_with_extension = make_new_name_from_scheme(usr_scheme.clone(), counter, extension, creation_time).expect("Renaming Error C600!");
+            let new_name_with_extension = make_new_name_from_scheme(usr_scheme.clone(), counter, extension, creation_time, dir_name.to_string()).expect("Renaming Error C600!");
             let new_path: PathBuf = copy::new_full_path(&dir_path, new_name_with_extension);
             rename_single_file(old_path, new_path).expect("Renaming Error C601!");
             
@@ -38,7 +40,7 @@ pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme
 // as last)
 //
 // More TODO: add creation_time to the scheme
-fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsString, creation_time: DateTime<Utc>) -> Result<OsString, std::io::Error> {
+fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsString, creation_time: DateTime<Utc>, dir_name: String) -> Result<OsString, std::io::Error> {
     // Scheme validation
     if usr_scheme.len() <= 0 {
         return Err(Into::into(std::io::ErrorKind::InvalidInput))
@@ -60,6 +62,8 @@ fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsSt
             let time = creation_time.format("%F-%T").to_string();
             let test = time.as_str();
             temp_name.push_str(test);
+        } else if entry.contains("dir name") {
+            temp_name.push_str(dir_name.as_str())
         } else {
             return Err(Into::into(std::io::ErrorKind::InvalidInput));
         }
