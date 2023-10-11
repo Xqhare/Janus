@@ -5,10 +5,6 @@ use std::path::{PathBuf, Path};
 use crate::file;
 use crate::directory::{self, Directory};
 
-// actual copying
-// extract current name and extension, paste them on the new module_path!
-// run fs::copy(old, new)?;
-
 pub fn new_full_path(path: &PathBuf, name_with_extension: OsString) -> PathBuf {
     let mut output: PathBuf = path.clone();
     let temp_path = Path::new(&name_with_extension);
@@ -29,7 +25,6 @@ fn copy_single_file(old: PathBuf, new: PathBuf) {
 
 pub fn copy_loop(provided_directory: Directory, provided_index_list: Vec<usize>, provided_new_path: PathBuf) {
     let mut counter = 0;
-
     for entry in directory::Directory::return_all_files(provided_directory) {
         // Check if current file is to be impacted
         let mut file_to_be_impacted: bool = false;
@@ -51,7 +46,6 @@ pub fn copy_loop(provided_directory: Directory, provided_index_list: Vec<usize>,
 
 pub fn move_loop(provided_directory: Directory, provided_index_list: Vec<usize>, provided_new_path: PathBuf) {
     let mut counter = 0;
-
     for entry in directory::Directory::return_all_files(provided_directory) {
         // Check if current file is to be impacted
         let mut file_to_be_impacted: bool = false;

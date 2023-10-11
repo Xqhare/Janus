@@ -36,8 +36,6 @@ fn main() {
         // print possible commands
         print::keybinds_main_menu();
         // now main usr input loop
-        // WIP: there needs to be more usr input validation than trailing whitespace removal;
-        // Remeber: all user input is hostile
         let usr_cmd = access::get_usr_cmd_input("Please enter a command:");
         let cd = "cd".to_owned();
         let quit = "q".to_owned();
@@ -49,14 +47,13 @@ fn main() {
             match usr_cd_input {
                 Ok(directory) => {
                     access::access_dir(directory);
-                    // Now comes the real meat of Janus, the file interaction.
                 },
                 _ => {
-                    println!("Invalid command entered. Aborting.");
+                    println!("Invalid command entered. Reseting Janus.");
                 },
             }
         } else {
-            println!("Invalid command entered. Aborting.");
+            println!("Invalid command entered. Reseting Janus.");
         }
     }
 }

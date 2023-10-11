@@ -6,6 +6,7 @@ use crate::rename;
 use home::home_dir;
 use std::io;
 use core::num::ParseIntError;
+use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 
 // Now comes the real meat of Janus, the file interaction.
@@ -19,81 +20,58 @@ pub fn access_dir(directory: Directory) {
     directory.print_contents_in_usr_format();
     print::keybinds_cd_menu();
     let usr_cmd_input = get_usr_cmd_input("Please enter a command:");
-    let back_cmd = "b".to_string();
-    let copy_cmd = "c".to_string();
-    let move_cmd = "m".to_string();
-    let rename_cmd = "r".to_string();
-    let mkdir_cmd = "mkdir".to_string();
-    let move_rename_cmd = "mr".to_string();
-    let move_rename_cmd_alt = "M".to_string();
-    let copy_rename_cmd = "cr".to_string();
-    let copy_rename_cmd_alt = "C".to_string();
-    // NOT EXPOSED TO UI
-    let test_cmd = "t".to_string();
-    let back_cmd_alt = "q".to_string();
-    // There has to be a better way of doing this; I just don't know how.
     // go back
-    if back_cmd == usr_cmd_input || back_cmd_alt == usr_cmd_input {
+    if "b".to_string() == usr_cmd_input || "q".to_string() == usr_cmd_input {
+        return;
     // copy files
-    } else if copy_cmd == usr_cmd_input {
-        print::index_example();
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+    } else if "c".to_string() == usr_cmd_input {
+        // creating the index list
+        let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
                 println!("Error {any_err} encountered. Aborting step.");
                 return;
             },
         };
-        print::example_dir();
-        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
-        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
+        // creating the path
+        let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
-                    PathBuf::from(copy_to_dir)
-                } else {
                     println!("Error {any_err} encountered. Aborting step.");
                     return;
                 }
-            },
         };
-        // TODO: This is wierd and needs a rework
+        // TODO: This is weird and needs a rework
         if path_existence_and_creator(copy_dir_decoded.clone()) {
             // Actual copying
             copy::copy_loop(directory, index_list, copy_dir_decoded);
             println!("Copying successful. Returning to main menu.");
             println!("-------------------------------------------");
+        // I believe this to be superfluous, but I feel better having it
         } else {
             return;
         };
     // move files -> means DELETION of files.
-    } else if move_cmd == usr_cmd_input {
-        print::index_example();
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+    } else if "m".to_string() == usr_cmd_input {
+        // creating the index list
+        let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
                 println!("Error {any_err} encountered. Aborting step.");
                 return;
             },
         };
-        print::example_dir();
-        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
-        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
+        // creating the path
+        let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
-                    PathBuf::from(copy_to_dir)
-                } else {
                     println!("Error {any_err} encountered. Aborting step.");
                     return;
                 }
-            },
         };
-        // TODO: This is wierd and needs a rework
+        // TODO: This is weird and needs a rework
         if path_existence_and_creator(copy_dir_decoded.clone()) {
-            // Actual copying
+            // Actual moving
             copy::move_loop(directory, index_list, copy_dir_decoded);
             println!("Moving successful. Returning to main menu.");
             println!("-------------------------------------------");
@@ -101,56 +79,45 @@ pub fn access_dir(directory: Directory) {
             return;
         };
     // rename files
-    } else if rename_cmd == usr_cmd_input {
-        print::index_example();
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+    } else if "r".to_string() == usr_cmd_input {
+        let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
                 println!("Error {any_err} encountered. Aborting step.");
                 return;
             },
         };
-        print::rename_schema_example();
-        let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
+        let usr_scheme_input = get_remame_scheme_usr_input();
+        // Actual renaming
         rename::rename_loop(directory, index_list, usr_scheme_input);
         println!("Renaming successful. Returning to main menu.");
         println!("-------------------------------------------");
         return;
     // make directory
-    } else if mkdir_cmd == usr_cmd_input {
-        print::example_dir();
-        let new_dir_path: String = get_usr_cmd_input("Please enter the path of the directory you want to create.");
-        let parsed_path = Path::new(&new_dir_path);
-        let _ignore_error = mkdir::create_dir(parsed_path);
+    } else if "mkdir".to_string() == usr_cmd_input {
+        make_dir_usr_input();
         return;
     // copy AND rename files
-    } else if copy_rename_cmd == usr_cmd_input || copy_rename_cmd_alt == usr_cmd_input {
+    } else if "cr".to_string() == usr_cmd_input || "C".to_string() == usr_cmd_input {
         let mut copy_success = false;
-        // first I just copy
-        print::index_example();
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+    // first I just copy
+        // creating the index list
+        let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
                 println!("Error {any_err} encountered. Aborting step.");
                 return;
             },
         };
-        print::example_dir();
-        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
-        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
+        // creating the path
+        let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
-                    PathBuf::from(copy_to_dir)
-                } else {
                     println!("Error {any_err} encountered. Aborting step.");
                     return;
                 }
-            },
         };
-        // TODO: This is wierd and needs a rework
+        // TODO: This is weird and needs a rework
         if path_existence_and_creator(copy_dir_decoded.clone()) {
             // Actual copying
             copy::copy_loop(directory, index_list, copy_dir_decoded.clone());
@@ -163,17 +130,15 @@ pub fn access_dir(directory: Directory) {
             println!("-----------------------");
             println!("The directory contains:");
             new_dir.print_contents_in_usr_format();
-            print::index_example();
-            let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-            let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+            // creating the index list
+            let index_list: Vec<usize> = match get_index_with_usr_input() {
                 Ok(index_list) => {index_list},
                 Err(any_err) => {
                     println!("Error {any_err} encountered. Aborting step.");
                     return;
                 },
-            };
-            print::rename_schema_example();
-            let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
+        };
+            let usr_scheme_input = get_remame_scheme_usr_input();
             rename::rename_loop(new_dir, index_list, usr_scheme_input);
             println!("Copy and renaming successful. Returning to main menu.");
             println!("-------------------------------------------");
@@ -182,32 +147,26 @@ pub fn access_dir(directory: Directory) {
         // Failsafe
         return;
     // move AND rename files
-    } else if move_rename_cmd == usr_cmd_input || move_rename_cmd_alt == usr_cmd_input {
+    } else if "mr".to_string() == usr_cmd_input || "M".to_string() == usr_cmd_input {
         let mut copy_success = false;
-        // first I just copy
-        print::index_example();
-        let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-        let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+    // first I just copy
+        // creating the index list
+        let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
                 println!("Error {any_err} encountered. Aborting step.");
                 return;
             },
         };
-        print::example_dir();
-        let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
-        let copy_dir_decoded: PathBuf = match check_string_into_path(copy_to_dir.clone()) {
+        // creating the path
+        let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
-                    PathBuf::from(copy_to_dir)
-                } else {
                     println!("Error {any_err} encountered. Aborting step.");
                     return;
                 }
-            },
         };
-        // TODO: This is wierd and needs a rework
+        // TODO: This is weird and needs a rework
         if path_existence_and_creator(copy_dir_decoded.clone()) {
             // Actual copying
             copy::move_loop(directory, index_list, copy_dir_decoded.clone());
@@ -220,17 +179,15 @@ pub fn access_dir(directory: Directory) {
             println!("-----------------------");
             println!("The directory contains:");
             new_dir.print_contents_in_usr_format();
-            print::index_example();
-            let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
-            let index_list: Vec<usize> = match usr_file_input_decoder(usr_file_index_list) {
+            // creating the index list
+            let index_list: Vec<usize> = match get_index_with_usr_input() {
                 Ok(index_list) => {index_list},
                 Err(any_err) => {
                     println!("Error {any_err} encountered. Aborting step.");
                     return;
                 },
-            };
-            print::rename_schema_example();
-            let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
+        };
+            let usr_scheme_input = get_remame_scheme_usr_input();
             rename::rename_loop(new_dir, index_list, usr_scheme_input);
             println!("Copy and renaming successful. Returning to main menu.");
             println!("-------------------------------------------");
@@ -239,7 +196,7 @@ pub fn access_dir(directory: Directory) {
         // Failsafe
         return;
     // TESTING
-    } else if test_cmd == usr_cmd_input {
+    } else if "t".to_string() == usr_cmd_input {
         return_home_dir_path();
         let debug1 = directory.return_file_index();
         println!("debug {debug1:?}");
@@ -286,10 +243,8 @@ fn check_string_into_path(input: String) -> std::io::Result<PathBuf> {
     } else {
         let path_to_test = Path::new(&input);
         // if this check returns true; the Input can be used without any more modification.
-        
         canon(path_to_test.to_path_buf())
     }
-
 }
 
 fn check_existance_dir(path: PathBuf) -> bool {
@@ -320,6 +275,8 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
     for index in split_file_list {
         if index.contains('-') {
             let start_end_vec = index.split('-').collect::<Vec<&str>>();
+            // I don't know what to put in the else block; Maybe a panic or Error of some kind.
+            // There is no need for that atm as the code works as expected
             let [start_str, end_str] = start_end_vec[..] else { todo!()};
             let start = check_str_into_pos_int(start_str)?;
             let end = check_str_into_pos_int(end_str)?;
@@ -328,6 +285,8 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
             }
         } else if index.contains("..") {
             let start_end_vec = index.split("..").collect::<Vec<&str>>();
+            // I don't know what to put in the else block; Maybe a panic or Error of some kind.
+            // There is no need for that atm as the code works as expected
             let [start_str, end_str] = start_end_vec[..] else { todo!()};
             let start = check_str_into_pos_int(start_str)?;
             let end = check_str_into_pos_int(end_str)?;
@@ -336,6 +295,8 @@ fn usr_file_input_decoder(file_index_list: String) -> Result<Vec<usize>, ParseIn
             }
         } else if index.contains('/') {
             let start_end_vec = index.split('/').collect::<Vec<&str>>();
+            // I don't know what to put in the else block; Maybe a panic or Error of some kind.
+            // There is no need for that atm as the code works as expected
             let [start_str, end_str] = start_end_vec[..] else { todo!()};
             let start = check_str_into_pos_int(start_str)? - 1;
             let end = check_str_into_pos_int(end_str)?;
@@ -365,6 +326,7 @@ fn check_str_into_pos_int(to_check: &str) -> Result<usize, ParseIntError> {
     let number: usize = to_check.parse()?;
     return Ok(number)
 }
+
 pub fn usr_cd() -> Result<Directory, io::Error> {
     print::example_dir();
     print::example_home_shortcut();
@@ -374,6 +336,9 @@ pub fn usr_cd() -> Result<Directory, io::Error> {
     return output
 }
 
+// WIP: there needs to be more usr input validation than trailing whitespace removal;
+// The only problem is, I don't really know how.
+// Remeber: all user input is hostile
 pub fn get_usr_cmd_input(prompt: &str) -> String {
     println!("{prompt}");
     let mut input = String::new();
@@ -383,7 +348,6 @@ pub fn get_usr_cmd_input(prompt: &str) -> String {
             return output
         },
         Err(_input_clearly_invalid) => {
-            
             "Invalid command".to_owned()
         },
     }
@@ -394,4 +358,43 @@ fn return_home_dir_path() -> PathBuf {
     // is not. Why? Fuck me thats why!
     let usr_dir: PathBuf = home_dir().unwrap();
     return usr_dir
+}
+
+fn get_index_with_usr_input() -> Result<Vec<usize>, io::Error> {
+    print::index_example();
+    let usr_file_index_list = get_usr_cmd_input("Please enter the shown index of all files you want to impact.");
+    match usr_file_input_decoder(usr_file_index_list) {
+        Ok(index_list) => {return Ok(index_list);},
+        Err(_any_err) => {
+            return Err(ErrorKind::InvalidInput.into());
+        },
+    };
+}
+
+fn get_dir_path_usr_input() -> Result<PathBuf, io::Error> {
+    print::example_dir();
+    let copy_to_dir = get_usr_cmd_input("Please enter the path of the directory you want to paste into.");
+    match check_string_into_path(copy_to_dir.clone()) {
+        Ok(ok_path) => {return Ok(ok_path);},
+        Err(_any_err) => {
+            if path_existence_and_creator(PathBuf::from(copy_to_dir.clone())) {
+                return Ok(PathBuf::from(copy_to_dir));
+            } else {
+                return Err(ErrorKind::InvalidInput.into());
+            }
+        },
+    };
+}
+
+fn get_remame_scheme_usr_input() -> String {
+    print::rename_schema_example();
+    let usr_scheme_input = get_usr_cmd_input("Please enter your schema:");
+    return usr_scheme_input;
+}
+
+fn make_dir_usr_input() {
+    print::example_dir();
+    let new_dir_path: String = get_usr_cmd_input("Please enter the path of the directory you want to create.");
+    let parsed_path = Path::new(&new_dir_path);
+    let _ignore_error = mkdir::create_dir(parsed_path);
 }

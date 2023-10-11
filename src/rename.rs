@@ -4,7 +4,6 @@ use chrono::DateTime;
 
 use crate::{directory::Directory, copy};
 
-
 pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme: String) {
     let mut counter = 0;
     let dir_path: PathBuf = directory.return_dir_path();
@@ -25,7 +24,6 @@ pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme
             let new_name_with_extension = make_new_name_from_scheme(usr_scheme.clone(), counter, extension, creation_time, dir_name.to_string()).expect("Renaming Error C600!");
             let new_path: PathBuf = copy::new_full_path(&dir_path, new_name_with_extension);
             rename_single_file(old_path, new_path).expect("Renaming Error C601!");
-            
         }
         counter += 1;
     }
@@ -38,8 +36,6 @@ pub fn rename_loop(directory: Directory, file_index_list: Vec<usize>, usr_scheme
 // custom name needs to support entered whitespace. For linux support only / or NUL are non valid,
 // for rest: NUL, \, /, :, *, ?, ", <, >, |. (for win no whitespace at start or end, and no period
 // as last)
-//
-// More TODO: add creation_time to the scheme
 fn make_new_name_from_scheme(usr_scheme: String, counter: usize, extension: OsString, creation_time: DateTime<Utc>, dir_name: String) -> Result<OsString, std::io::Error> {
     // Scheme validation
     if usr_scheme.len() <= 0 {

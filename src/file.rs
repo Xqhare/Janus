@@ -104,7 +104,6 @@ impl File {
         let creation_time_in_system_time = &self.time_created.as_ref().unwrap();
         let output_date: DateTime<Utc> = (*(*creation_time_in_system_time)).into();
         return output_date;
-
     } 
 
     pub fn debug_print_all(&self) {
