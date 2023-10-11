@@ -29,7 +29,7 @@ pub fn access_dir(directory: Directory) {
         let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
-                println!("Error {any_err} encountered. Aborting step.");
+                println!("Error {any_err} encountered. Resetting Janus.");
                 return;
             },
         };
@@ -37,7 +37,7 @@ pub fn access_dir(directory: Directory) {
         let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                    println!("Error {any_err} encountered. Aborting step.");
+                    println!("Error {any_err} encountered. Resetting Janus.");
                     return;
                 }
         };
@@ -57,7 +57,7 @@ pub fn access_dir(directory: Directory) {
         let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
-                println!("Error {any_err} encountered. Aborting step.");
+                println!("Error {any_err} encountered. Resetting Janus.");
                 return;
             },
         };
@@ -65,7 +65,7 @@ pub fn access_dir(directory: Directory) {
         let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                    println!("Error {any_err} encountered. Aborting step.");
+                    println!("Error {any_err} encountered. Resetting Janus.");
                     return;
                 }
         };
@@ -83,7 +83,7 @@ pub fn access_dir(directory: Directory) {
         let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
-                println!("Error {any_err} encountered. Aborting step.");
+                println!("Error {any_err} encountered. Resetting Janus.");
                 return;
             },
         };
@@ -105,7 +105,7 @@ pub fn access_dir(directory: Directory) {
         let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
-                println!("Error {any_err} encountered. Aborting step.");
+                println!("Error {any_err} encountered. Resetting Janus.");
                 return;
             },
         };
@@ -113,7 +113,7 @@ pub fn access_dir(directory: Directory) {
         let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                    println!("Error {any_err} encountered. Aborting step.");
+                    println!("Error {any_err} encountered. Resetting Janus.");
                     return;
                 }
         };
@@ -134,7 +134,7 @@ pub fn access_dir(directory: Directory) {
             let index_list: Vec<usize> = match get_index_with_usr_input() {
                 Ok(index_list) => {index_list},
                 Err(any_err) => {
-                    println!("Error {any_err} encountered. Aborting step.");
+                    println!("Error {any_err} encountered. Resetting Janus.");
                     return;
                 },
         };
@@ -154,7 +154,7 @@ pub fn access_dir(directory: Directory) {
         let index_list: Vec<usize> = match get_index_with_usr_input() {
             Ok(index_list) => {index_list},
             Err(any_err) => {
-                println!("Error {any_err} encountered. Aborting step.");
+                println!("Error {any_err} encountered. Resetting Janus.");
                 return;
             },
         };
@@ -162,7 +162,7 @@ pub fn access_dir(directory: Directory) {
         let copy_dir_decoded: PathBuf = match get_dir_path_usr_input() {
             Ok(ok_path) => {ok_path},
             Err(any_err) => {
-                    println!("Error {any_err} encountered. Aborting step.");
+                    println!("Error {any_err} encountered. Resetting Janus.");
                     return;
                 }
         };
@@ -183,7 +183,7 @@ pub fn access_dir(directory: Directory) {
             let index_list: Vec<usize> = match get_index_with_usr_input() {
                 Ok(index_list) => {index_list},
                 Err(any_err) => {
-                    println!("Error {any_err} encountered. Aborting step.");
+                    println!("Error {any_err} encountered. Resetting Janus.");
                     return;
                 },
         };
@@ -205,12 +205,13 @@ pub fn access_dir(directory: Directory) {
         }
     // provided input Invalid!
     } else {
-        println!("Invalid command entered. Aborting.");
+        println!("Invalid command entered. Resetting Janus.");
         return;
     }
 }
 
 fn yn_decoder(input: String) -> bool {
+    // Why are there pointers here? It works, but I don't know why.
     return input == *"Yes" || input == *"yes" || input == *"Y" || input == *"y"
 }
 
