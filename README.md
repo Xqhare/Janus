@@ -64,3 +64,10 @@ Janus delivers a modern, sleek, performant, lean, mean, minimalist, feature rich
 Jauns provides a powerful and versitile file transformation solution that can help organizations, individuals, aliens, intelligence agencies or governments of any size, to improve the efficiency, accuracy, scalability, and reliability of their file management processes.
 
 Janus is currently feature complete, stable and completely bug free - just like any other software written in rust.
+
+
+## Acknowledgments
+Thanks to the open-source community for providing invaluable tools and libraries.
+Used in this project:
+- [home](https://crates.io/crates/home)
+- [chrono](https://crates.io/crates/chrono)
